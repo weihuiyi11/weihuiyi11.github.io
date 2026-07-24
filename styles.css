@@ -25,22 +25,25 @@ body {
     #020309;
 }
 
-.space-layer { position: absolute; inset: -10%; pointer-events: none; }
-.space-layer-one {
-  opacity: .7;
-  background-image:
-    radial-gradient(circle, #fff 0 1px, transparent 1.3px),
-    radial-gradient(circle, #83dff6 0 1px, transparent 1.5px),
-    radial-gradient(circle, #ffcda2 0 1.1px, transparent 1.6px);
-  background-size: 94px 94px, 137px 137px, 183px 183px;
-  background-position: 12px 15px, 44px 65px, 112px 22px;
-  animation: drift 34s linear infinite;
+.starfield {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
 }
-.space-layer-two {
-  opacity: .22;
-  background-image: radial-gradient(circle, #fff 0 1px, transparent 1.3px);
-  background-size: 43px 43px;
-  animation: drift 55s linear infinite reverse;
+.space-haze {
+  position: fixed;
+  inset: -12%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .72;
+  background:
+    radial-gradient(ellipse at 77% 18%, rgba(103, 49, 139, .21), transparent 34%),
+    radial-gradient(ellipse at 10% 82%, rgba(23, 105, 132, .15), transparent 30%),
+    radial-gradient(ellipse at 55% 60%, rgba(32, 42, 79, .10), transparent 40%);
+  animation: hazeDrift 28s ease-in-out infinite alternate;
 }
 .grain {
   position: absolute; inset: 0; pointer-events: none; z-index: 30; opacity: .045;
@@ -98,7 +101,23 @@ body {
 .launch-transition p { letter-spacing: .22em; margin: 0 0 10px; font-size: 13px; }
 .launch-transition small { color: rgba(193,218,234,.45); letter-spacing: .32em; font-size: 8px; }
 
-.star-map { position: relative; z-index: 2; min-height: 100svh; display: grid; grid-template-rows: auto 1fr auto; padding: 26px clamp(22px, 3.5vw, 58px) 20px; animation: mapEnter 1.15s cubic-bezier(.2,.8,.2,1) both; }
+.star-map {
+  position: relative;
+  z-index: 2;
+  height: 100svh;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(620px, 1fr) auto;
+  padding: 26px clamp(22px, 3.5vw, 58px) 20px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(126, 213, 234, .3) transparent;
+  animation: mapEnter 1.15s cubic-bezier(.2,.8,.2,1) both;
+}
+.star-map::-webkit-scrollbar { width: 7px; }
+.star-map::-webkit-scrollbar-track { background: transparent; }
+.star-map::-webkit-scrollbar-thumb { background: rgba(126, 213, 234, .24); border-radius: 999px; }
 .map-header { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 10; }
 .map-kicker { margin: 0 0 8px; font-size: 9px; }
 .map-header h2 { margin: 0; font-family: "Songti SC", "STSong", serif; font-weight: 400; font-size: clamp(24px, 2.4vw, 38px); letter-spacing: .08em; }
@@ -142,7 +161,16 @@ body {
 .signal-label { position:absolute; left:53px; top:3px; width:150px; text-align:left; }
 .signal-label b { display:block; white-space:nowrap; font-size:11px; font-weight:500; letter-spacing:.08em; }
 .signal-label small { display:block; margin-top:5px; color:rgba(248,207,146,.56); font-size:8px; letter-spacing:.08em; }
-.route-panel { position:absolute; right:0; bottom:3%; width:220px; padding:18px; border-left:1px solid var(--line); background:linear-gradient(90deg,rgba(10,18,31,.3),transparent); }
+.route-panel {
+  position:absolute;
+  right:0;
+  bottom:clamp(62px, 9vh, 92px);
+  width:220px;
+  padding:18px;
+  border-left:1px solid var(--line);
+  background:linear-gradient(90deg,rgba(10,18,31,.5),rgba(10,18,31,.08));
+  backdrop-filter:blur(3px);
+}
 .route-panel span { color:#7ed5ea; font-size:8px; letter-spacing:.16em; }
 .route-panel p { font-family:"Songti SC","STSong",serif; font-size:14px; line-height:1.75; margin:10px 0; color:rgba(240,242,245,.78); }
 .route-panel small { color:rgba(226,235,244,.35); font-size:8px; }
@@ -172,7 +200,10 @@ body {
 .signal-card blockquote { margin:25px 0; padding:22px 0; border-top:1px solid rgba(246,201,135,.16); border-bottom:1px solid rgba(246,201,135,.16); font-family:"Songti SC","STSong",serif; font-size:18px; line-height:1.8; color:#f1e7d6; }
 .signal-note { color:rgba(226,231,235,.45); line-height:1.8; font-size:10px; }
 
-@keyframes drift { to { transform: translate3d(6%,4%,0); } }
+@keyframes hazeDrift {
+  from { transform: translate3d(-1.5%, -.5%, 0) scale(1); }
+  to { transform: translate3d(1.5%, 1%, 0) scale(1.03); }
+}
 @keyframes spin { to { transform:rotate(360deg); } }
 @keyframes transitionIn { from { opacity:0; } }
 @keyframes mapEnter { from { opacity:0; filter:blur(8px); } }
@@ -193,7 +224,7 @@ body {
   .subtitle { font-size:14px; line-height:1.8; }
   .launch-button { margin-top:24px; }
   .launch-status { display:none; }
-  .star-map { padding:22px 18px 14px; min-height:820px; }
+  .star-map { padding:22px 18px 14px; height:100svh; grid-template-rows:auto minmax(690px, 1fr) auto; }
   .map-header { align-items:center; }
   .map-actions button:first-child { display:none; }
   .map-viewport { min-height:690px; }
@@ -207,7 +238,7 @@ body {
   .planet-label small { display:none; }
   .earth-signal { left:10%; top:70%; }
   .signal-label { width:120px; }
-  .route-panel { right:auto; left:0; bottom:0; width:200px; }
+  .route-panel { right:auto; left:0; bottom:34px; width:200px; }
   .ship-marker { left:46%; top:58%; }
   .map-footer { gap:10px; }
   .desktop-hint { display:none; }

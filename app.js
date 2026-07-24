@@ -37,6 +37,101 @@ const siteShell = document.querySelector("#site-shell");
 const archiveOverlay = document.querySelector("#archive-overlay");
 const signalOverlay = document.querySelector("#signal-overlay");
 
+function createStarfield() {
+  const canvas = document.querySelector("#starfield");
+  const context = canvas.getContext("2d");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const palette = [
+    [222, 236, 255],
+    [169, 218, 244],
+    [255, 225, 190],
+    [198, 202, 255]
+  ];
+  let stars = [];
+  let width = 0;
+  let height = 0;
+  let animationFrame = 0;
+
+  // Stable pseudo-random values keep the sky natural without jumping after resize.
+  function randomFactory(seed) {
+    return function random() {
+      seed |= 0;
+      seed = seed + 0x6D2B79F5 | 0;
+      let value = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      value = value + Math.imul(value ^ value >>> 7, 61 | value) ^ value;
+      return ((value ^ value >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  function buildStars() {
+    const random = randomFactory(7192001);
+    const density = Math.min(310, Math.max(150, Math.round(width * height / 6500)));
+    stars = Array.from({ length: density }, (_, index) => {
+      const depth = Math.pow(random(), 1.85);
+      const bright = random() > .91;
+      return {
+        x: random() * width,
+        y: random() * height,
+        radius: bright ? .85 + random() * 1.25 : .22 + depth * .78,
+        opacity: bright ? .58 + random() * .36 : .14 + random() * .46,
+        phase: random() * Math.PI * 2,
+        speed: .00018 + random() * .00042,
+        color: palette[Math.floor(random() * palette.length)],
+        glow: bright ? 2.5 + random() * 4 : 0,
+        drift: (index % 3 - 1) * (.45 + depth)
+      };
+    });
+  }
+
+  function resize() {
+    window.cancelAnimationFrame(animationFrame);
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = Math.round(width * pixelRatio);
+    canvas.height = Math.round(height * pixelRatio);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    buildStars();
+    if (reducedMotion) {
+      draw(performance.now());
+    } else {
+      animationFrame = window.requestAnimationFrame(draw);
+    }
+  }
+
+  function draw(time) {
+    context.clearRect(0, 0, width, height);
+
+    stars.forEach((star) => {
+      const shimmer = reducedMotion ? 1 : .78 + Math.sin(time * star.speed + star.phase) * .22;
+      const x = star.x + (reducedMotion ? 0 : Math.sin(time * .000025 + star.phase) * star.drift);
+      const [red, green, blue] = star.color;
+
+      if (star.glow) {
+        context.beginPath();
+        context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${star.opacity * .12 * shimmer})`;
+        context.arc(x, star.y, star.radius + star.glow, 0, Math.PI * 2);
+        context.fill();
+      }
+
+      context.beginPath();
+      context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${star.opacity * shimmer})`;
+      context.arc(x, star.y, star.radius, 0, Math.PI * 2);
+      context.fill();
+    });
+
+    if (!reducedMotion) animationFrame = window.requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+  window.addEventListener("beforeunload", () => window.cancelAnimationFrame(animationFrame));
+}
+
+createStarfield();
+
 function closePanels() {
   archiveOverlay.hidden = true;
   signalOverlay.hidden = true;
