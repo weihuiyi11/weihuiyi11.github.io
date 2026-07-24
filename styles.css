@@ -186,6 +186,19 @@ body {
 .archive-summary { margin:12px 0 0; color:color-mix(in srgb,var(--accent) 70%,white); font-family:"Songti SC","STSong",serif; }
 .archive-divider { height:1px; background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 55%,transparent),transparent); margin:28px 0; }
 .archive-detail { color:rgba(229,236,243,.67); line-height:2; font-size:14px; }
+.origin-intro { margin:0; color:rgba(237,241,247,.78); font-family:"Songti SC","STSong",serif; font-size:16px; line-height:2.05; }
+.origin-status { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:1px; margin:28px 0; border:1px solid rgba(246,201,135,.18); background:rgba(246,201,135,.18); }
+.origin-status div { min-height:86px; padding:16px; display:flex; flex-direction:column; justify-content:space-between; gap:10px; background:rgba(10,18,30,.88); }
+.origin-status span, .origin-label, .origin-note span { color:rgba(246,210,153,.6); font-size:8px; letter-spacing:.17em; }
+.origin-status b { color:rgba(244,238,227,.9); font-size:11px; font-weight:500; letter-spacing:.05em; }
+.origin-section { margin-top:31px; }
+.origin-section > p:last-child { margin:11px 0 0; color:rgba(229,236,243,.63); font-size:13px; line-height:2; }
+.origin-label { margin:0; }
+.origin-quote { margin:14px 0 17px; color:#f8dfb8; font-family:"Songti SC","STSong",serif; font-size:clamp(20px,3.1vw,28px); line-height:1.5; }
+.trait-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:15px; }
+.trait-list span { border:1px solid rgba(245,211,162,.22); border-radius:999px; padding:7px 10px; color:rgba(244,235,220,.74); background:rgba(246,201,135,.06); font-size:10px; letter-spacing:.04em; }
+.origin-note { margin-top:29px; padding:20px; border-left:1px solid rgba(246,201,135,.45); background:linear-gradient(90deg,rgba(246,201,135,.09),transparent); }
+.origin-note p { margin:10px 0 0; color:rgba(245,239,229,.75); font-family:"Songti SC","STSong",serif; font-size:14px; line-height:1.9; }
 .archive-placeholder { margin-top:27px; border:1px dashed rgba(193,218,237,.17); padding:20px; display:flex; flex-direction:column; gap:7px; background:rgba(135,184,211,.04); }
 .archive-placeholder span { font-size:11px; letter-spacing:.12em; }
 .archive-placeholder small { color:rgba(214,227,237,.4); font-size:10px; }
@@ -241,6 +254,8 @@ body {
   .route-panel { right:auto; left:0; bottom:34px; width:200px; }
   .ship-marker { left:46%; top:58%; }
   .map-footer { gap:10px; }
+  .archive-card, .signal-card { padding:30px 24px; }
+  .origin-status { grid-template-columns:1fr; }
   .desktop-hint { display:none; }
 }
 
