@@ -31,41 +31,25 @@ const destinations = {
 
 function originArchive() {
   return `
-    <div class="archive-number">WHY-001</div>
-    <p class="archive-kicker">ORIGIN PLANET · 航行员档案</p>
-    <h3>此刻的辉怡</h3>
-    <p class="archive-summary">在地球上研究水与土地，也在自己的宇宙里寻找坐标。</p>
-    <div class="archive-divider"></div>
-    <p class="origin-intro">我现在最重要的身份，是中国科学院地理科学与资源研究所的一名研究生。眼下难得处在一段比较悠闲的航段，但我知道，大概一个月后，研究任务就会重新拉满。趁这段空隙，我想先把自己记录下来。</p>
-
-    <section class="origin-status" aria-label="航行员当前状态">
-      <div><span>当前身份</span><b>地理学研究生</b></div>
-      <div><span>观测任务</span><b>流域 · 闸坝 · 灌溉</b></div>
-      <div><span>航行阶段</span><b>短暂的悠闲与蓄能</b></div>
-      <div><span>核心燃料</span><b>好奇心、挑战与情感</b></div>
-    </section>
-
-    <section class="origin-section">
-      <p class="origin-label">PERSONAL FLIGHT RULE</p>
-      <blockquote class="origin-quote">“走自己的路，让别人说去吧。”</blockquote>
-      <p>这是我小时候给自己的座右铭。现在的我不再完全照单全收：我知道别人对我的印象，会影响他们之后如何对待我，也可能影响我能获得的资源。所以我会认真维护自己的形象；但在那些真正与我无关的目光面前，我还是希望自己不必活得太小心。</p>
-    </section>
-
-    <section class="origin-section origin-traits">
-      <p class="origin-label">航行员特征</p>
-      <div class="trait-list">
-        <span>神经大条 · 炸炸呼呼</span>
-        <span>偶尔敏感，但不愿假装</span>
-        <span>喜欢冒险，也喜欢难一点的事</span>
-        <span>说话直接，仍在学习更好地表达</span>
+    <div class="cabin-arrival">
+      <div class="cabin-topline"><span>W.H.Y.号 · 原点观测舱</span><span>舱压稳定 · 01</span></div>
+      <div class="cabin-window" aria-hidden="true">
+        <div class="window-stars"></div><div class="origin-world"></div><div class="window-reflection"></div>
+        <p>抵达 · 原点星球</p>
       </div>
-      <p>我通常把自己的感受放在很前面，这让我比较有边界，也让我有时会不小心刺到朋友。幸运的是，我身边有很包容的人；而我也在慢慢学着，让直率不等于忽略别人。</p>
-    </section>
-
-    <section class="origin-note">
-      <span>PRIVATE TRANSMISSION</span>
-      <p>我喜欢未知，也很需要情感。那些情绪浓烈的动漫、故事和关系，会让我一次次确认：原来人可以这样认真地靠近彼此。</p>
-    </section>`;
+      <div class="cabin-console"><i></i><span>正在接收航行员的私人坐标</span><b>●</b></div>
+    </div>
+    <div class="origin-reading">
+      <div class="origin-heading"><div><p class="archive-kicker">ORIGIN PLANET · PILOT LOG</p><h3>此刻的辉怡</h3></div><span class="archive-number">WHY-001</span></div>
+      <p class="origin-lead">她正在地球上研究水与土地，也在这段难得安静的航程里，试着把自己先记录下来。</p>
+      <div class="flight-grid">
+        <section><span>当前坐标</span><b>中国科学院地理科学与资源研究所<br>研究生</b></section>
+        <section><span>正在发生</span><b>任务还未全面拉满；一个月后的忙碌已经在靠近。</b></section>
+        <section><span>引擎偏好</span><b>未知、难一点的事，以及值得认真投入的关系。</b></section>
+      </div>
+      <section class="log-entry"><p>航行记录 01</p><h4>不必活得太小心</h4><blockquote>“走自己的路，让别人说去吧。”</blockquote><div>这是小时候留下的航行准则。如今她知道，人与人之间的印象会带来真实的后果；因此会认真照看自己在世界里的样子。但那些无关紧要的目光，仍不值得让她缩小。</div></section>
+      <section class="log-entry split"><div><p>航行记录 02</p><h4>外放，也会被打动</h4><div>她有点冒冒失失，直率得常常先把自己的感受放在前面；可对真正珍惜的人和情感，她又比表面更容易被触动。朋友们的包容，她一直记得。</div></div><div class="signal-tile"><span>INCOMING SIGNAL</span><b>比起标准答案，<br>更想走向有挑战、也有情感温度的地方。</b></div></section>
+    </div>`;
 }
 
 const launchScreen = document.querySelector("#launch-screen");
