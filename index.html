@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#020309">
+  <meta name="description" content="宇宙航行：W.H.Y.号——魏辉怡的私人宇宙航行原型。">
+  <title>宇宙航行：W.H.Y.号</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="site-shell" id="site-shell">
+    <div class="space-layer space-layer-one"></div>
+    <div class="space-layer space-layer-two"></div>
+    <div class="grain"></div>
+
+    <section class="launch-screen" id="launch-screen">
+      <div class="launch-art" role="img" aria-label="宏伟深空中的 W.H.Y.号与挥手邀请的宇航员"></div>
+      <div class="launch-shade"></div>
+      <header class="launch-nav">
+        <span class="mission-mark">W.H.Y. / DEEP SPACE LOG</span>
+        <span class="mission-time">航行纪元 · 2026</span>
+      </header>
+      <div class="launch-copy">
+        <p class="eyebrow">PRIVATE UNIVERSE · 私人宇宙</p>
+        <h1>宇宙航行：<span>W.H.Y.号</span></h1>
+        <p class="subtitle">小时候，我想成为一名宇航员，<br>后来我没有飞向太空，但我仍然喜欢一切未知。</p>
+        <button class="launch-button" id="launch-button" type="button">
+          <span>开始航行</span><i aria-hidden="true">↗</i>
+        </button>
+      </div>
+      <div class="launch-status">
+        <span>坐标 30.5928° N · 114.3055° E</span>
+        <span class="status-line"></span>
+        <span>信号稳定</span>
+      </div>
+      <div class="launch-transition" id="launch-transition" hidden>
+        <div class="scan-ring"></div>
+        <p>航行者身份确认中</p>
+        <small>WELCOME ABOARD</small>
+      </div>
+    </section>
+
+    <section class="star-map" id="star-map" aria-label="W.H.Y.号私人星图" hidden>
+      <header class="map-header">
+        <div>
+          <p class="map-kicker">NAVIGATION SYSTEM · ONLINE</p>
+          <h2>W.H.Y.号私人星图</h2>
+        </div>
+        <nav class="map-actions" aria-label="星图工具">
+          <button id="sound-button" type="button">声场 关</button>
+          <button id="return-outside" type="button">返回舱外</button>
+        </nav>
+      </header>
+
+      <div class="map-viewport">
+        <div class="orbit orbit-a"></div>
+        <div class="orbit orbit-b"></div>
+        <div class="orbit orbit-c"></div>
+        <div class="constellation constellation-a"></div>
+        <div class="constellation constellation-b"></div>
+
+        <div class="ship-marker" aria-label="W.H.Y.号当前位置">
+          <span class="ship-flare"></span>
+          <span class="ship-body">W.H.Y.</span>
+          <small>当前位置</small>
+        </div>
+
+        <button class="destination destination-origin" type="button"
+          data-destination="origin"
+          style="--planet-color:#f6c987;--planet-x:47%;--planet-y:45%;--planet-size:112px"
+          aria-label="前往原点星球：此刻的我">
+          <span class="planet"><i></i></span>
+          <span class="planet-label"><b>原点星球</b><small>此刻的我</small></span>
+        </button>
+
+        <button class="destination destination-memory" type="button"
+          data-destination="memory"
+          style="--planet-color:#bc8cff;--planet-x:22%;--planet-y:27%;--planet-size:88px"
+          aria-label="前往记忆星云：照片、朋友与走过的地方">
+          <span class="planet"><i></i></span>
+          <span class="planet-label"><b>记忆星云</b><small>照片、朋友与走过的地方</small></span>
+        </button>
+
+        <button class="destination destination-interest" type="button"
+          data-destination="interest"
+          style="--planet-color:#67d9ee;--planet-x:76%;--planet-y:25%;--planet-size:74px"
+          aria-label="前往兴趣卫星群：我最近喜欢的一切">
+          <span class="planet"><i></i></span>
+          <span class="planet-label"><b>兴趣卫星群</b><small>我最近喜欢的一切</small></span>
+        </button>
+
+        <button class="destination destination-earth" type="button"
+          data-destination="earth"
+          style="--planet-color:#6ed6a5;--planet-x:73%;--planet-y:72%;--planet-size:96px"
+          aria-label="前往地球观测站：全国流域观测任务">
+          <span class="planet"><i></i></span>
+          <span class="planet-label"><b>地球观测站</b><small>全国流域观测任务</small></span>
+        </button>
+
+        <button class="earth-signal" id="earth-signal" type="button">
+          <span class="signal-ripple ripple-one"></span>
+          <span class="signal-ripple ripple-two"></span>
+          <span class="signal-core">✦</span>
+          <span class="signal-label"><b>来自地球的信号</b><small>1 条未读消息</small></span>
+        </button>
+
+        <aside class="route-panel">
+          <span>航行日志 · 0001</span>
+          <p>选择一处坐标，开始认识她的宇宙。</p>
+          <small>可点击星球与漂浮信号</small>
+        </aside>
+      </div>
+
+      <footer class="map-footer">
+        <span><i class="online-dot"></i> W.H.Y.号运行正常</span>
+        <span>已发现区域 04 / 未知区域 ∞</span>
+        <span class="desktop-hint">点击星球以靠近 · ESC 返回星图</span>
+      </footer>
+    </section>
+
+    <div class="archive-overlay" id="archive-overlay" hidden>
+      <article class="archive-card" id="archive-card">
+        <button class="close-button" type="button" data-close aria-label="关闭档案">×</button>
+        <div class="archive-number" id="archive-number"></div>
+        <p class="archive-kicker">W.H.Y.号航行档案</p>
+        <h3 id="archive-title"></h3>
+        <p class="archive-summary" id="archive-summary"></p>
+        <div class="archive-divider"></div>
+        <p class="archive-detail" id="archive-detail"></p>
+        <div class="archive-placeholder">
+          <span>内容舱位预留</span>
+          <small>之后我们会在这里放入你的真实照片与故事</small>
+        </div>
+        <button class="return-button" type="button" data-close>返回私人星图</button>
+      </article>
+    </div>
+
+    <div class="archive-overlay signal-overlay" id="signal-overlay" hidden>
+      <article class="signal-card">
+        <button class="close-button" type="button" data-close aria-label="关闭信号">×</button>
+        <div class="signal-icon">✦</div>
+        <p class="archive-kicker">EARTH SIGNAL · 001</p>
+        <h3>接收到一段来自地球的信号</h3>
+        <dl>
+          <div><dt>信号来源</dt><dd>一位还没署名的朋友</dd></div>
+          <div><dt>接收时间</dt><dd>2026年7月</dd></div>
+        </dl>
+        <blockquote>“嘿，航行员。等你准备好，我们就一起继续往未知的地方去。”</blockquote>
+        <p class="signal-note">正式版中，朋友的留言会变成漂浮在宇宙里的新光点。</p>
+        <button class="return-button" type="button" data-close>信号已阅</button>
+      </article>
+    </div>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
