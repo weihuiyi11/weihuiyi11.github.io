@@ -197,19 +197,13 @@ document.querySelector("#sound-button").addEventListener("click", (event) => {
 
 document.querySelectorAll("[data-destination]").forEach((button) => {
   button.addEventListener("click", () => {
+    if (button.dataset.destination === "origin") {
+      window.location.assign("./origin.html");
+      return;
+    }
     const item = destinations[button.dataset.destination];
     const content = document.querySelector("#archive-content");
-    if (button.dataset.destination === "origin") {
-      content.innerHTML = originArchive();
-      content.querySelectorAll(".origin-tab").forEach((tab) => {
-        tab.addEventListener("click", () => {
-          content.querySelectorAll(".origin-tab, .origin-log").forEach((entry) => entry.classList.remove("active"));
-          tab.classList.add("active");
-          content.querySelector(`[data-log-panel="${tab.dataset.log}"]`).classList.add("active");
-        });
-      });
-    } else {
-      content.innerHTML = `
+    content.innerHTML = `
         <div class="archive-number" id="archive-number"></div>
         <p class="archive-kicker">W.H.Y.号航行档案</p>
         <h3 id="archive-title"></h3>
@@ -221,7 +215,6 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
       document.querySelector("#archive-title").textContent = item.name;
       document.querySelector("#archive-summary").textContent = item.summary;
       document.querySelector("#archive-detail").textContent = item.detail;
-    }
     document.querySelector("#archive-card").style.setProperty("--accent", item.color);
     archiveOverlay.hidden = false;
   });
