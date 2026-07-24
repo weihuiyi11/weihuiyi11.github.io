@@ -31,25 +31,30 @@ const destinations = {
 
 function originArchive() {
   return `
-    <div class="cabin-arrival">
-      <div class="cabin-topline"><span>W.H.Y.号 · 原点观测舱</span><span>舱压稳定 · 01</span></div>
-      <div class="cabin-window" aria-hidden="true">
-        <div class="window-stars"></div><div class="origin-world"></div><div class="window-reflection"></div>
-        <p>抵达 · 原点星球</p>
-      </div>
-      <div class="cabin-console"><i></i><span>正在接收航行员的私人坐标</span><b>●</b></div>
-    </div>
-    <div class="origin-reading">
-      <div class="origin-heading"><div><p class="archive-kicker">ORIGIN PLANET · PILOT LOG</p><h3>此刻的辉怡</h3></div><span class="archive-number">WHY-001</span></div>
-      <p class="origin-lead">她正在地球上研究水与土地，也在这段难得安静的航程里，试着把自己先记录下来。</p>
-      <div class="flight-grid">
-        <section><span>当前坐标</span><b>中国科学院地理科学与资源研究所<br>研究生</b></section>
-        <section><span>正在发生</span><b>任务还未全面拉满；一个月后的忙碌已经在靠近。</b></section>
-        <section><span>引擎偏好</span><b>未知、难一点的事，以及值得认真投入的关系。</b></section>
-      </div>
-      <section class="log-entry"><p>航行记录 01</p><h4>不必活得太小心</h4><blockquote>“走自己的路，让别人说去吧。”</blockquote><div>这是小时候留下的航行准则。如今她知道，人与人之间的印象会带来真实的后果；因此会认真照看自己在世界里的样子。但那些无关紧要的目光，仍不值得让她缩小。</div></section>
-      <section class="log-entry split"><div><p>航行记录 02</p><h4>外放，也会被打动</h4><div>她有点冒冒失失，直率得常常先把自己的感受放在前面；可对真正珍惜的人和情感，她又比表面更容易被触动。朋友们的包容，她一直记得。</div></div><div class="signal-tile"><span>INCOMING SIGNAL</span><b>比起标准答案，<br>更想走向有挑战、也有情感温度的地方。</b></div></section>
-    </div>`;
+    <section class="origin-cockpit" aria-label="W.H.Y.号原点观测舱">
+      <div class="cockpit-stars" aria-hidden="true"></div>
+      <div class="cockpit-hull hull-left" aria-hidden="true"></div><div class="cockpit-hull hull-right" aria-hidden="true"></div>
+      <header class="cockpit-header"><span>W.H.Y.号 / ORIGIN OBSERVATORY</span><span>距离原点星球 · 2,184 km</span></header>
+      <button class="cockpit-close" type="button" data-close aria-label="离开观测舱">×</button>
+      <div class="cockpit-window" aria-hidden="true"><div class="window-glow"></div><div class="origin-world"></div><div class="orbit-line orbit-line-one"></div><div class="orbit-line orbit-line-two"></div><span class="window-coordinate">ORIGIN · 00°00′</span></div>
+      <aside class="cockpit-left">
+        <span class="panel-tag">PILOT PROFILE</span><h3>此刻的辉怡</h3>
+        <p>在地球上研究水与土地，<br>也在自己的宇宙里寻找坐标。</p>
+        <div class="pilot-stat"><span>当前身份</span><b>地理学研究生</b></div>
+        <div class="pilot-stat"><span>航行阶段</span><b>短暂的悠闲与蓄能</b></div>
+      </aside>
+      <nav class="cockpit-tabs" aria-label="航行员记录">
+        <button class="origin-tab active" type="button" data-log="now"><i>01</i><span>此刻状态</span></button>
+        <button class="origin-tab" type="button" data-log="rule"><i>02</i><span>航行准则</span></button>
+        <button class="origin-tab" type="button" data-log="signal"><i>03</i><span>私人信号</span></button>
+      </nav>
+      <section class="cockpit-projection" aria-live="polite">
+        <article class="origin-log active" data-log-panel="now"><span>01 / CURRENT FLIGHT</span><h4>在忙碌靠近前，<br>先把自己记录下来。</h4><p>眼下的航程难得安静。但一个月后，研究任务会再次拉满；所以这间观测舱，是给此刻的她留下的一枚坐标。</p></article>
+        <article class="origin-log" data-log-panel="rule"><span>02 / FLIGHT RULE</span><h4>不必活得<br>太小心。</h4><p>小时候相信“走自己的路”。现在知道印象会影响关系与资源，于是认真照看自己在世界里的样子；但不让无关的目光替自己决定方向。</p></article>
+        <article class="origin-log" data-log-panel="signal"><span>03 / PRIVATE SIGNAL</span><h4>喜欢未知，<br>也很需要情感。</h4><p>她愿意走向难一点的事，也会被真挚的关系和情绪浓烈的故事打动。表面有些炸炸呼呼，内里却始终认真回应靠近。</p></article>
+      </section>
+      <footer class="cockpit-console"><div><i class="status-dot"></i> 舱压稳定</div><div class="console-sweep"><i></i></div><div>观测模式 · 私人</div><button type="button" data-close>返回私人星图 ↗</button></footer>
+    </section>`;
 }
 
 const launchScreen = document.querySelector("#launch-screen");
@@ -196,6 +201,13 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
     const content = document.querySelector("#archive-content");
     if (button.dataset.destination === "origin") {
       content.innerHTML = originArchive();
+      content.querySelectorAll(".origin-tab").forEach((tab) => {
+        tab.addEventListener("click", () => {
+          content.querySelectorAll(".origin-tab, .origin-log").forEach((entry) => entry.classList.remove("active"));
+          tab.classList.add("active");
+          content.querySelector(`[data-log-panel="${tab.dataset.log}"]`).classList.add("active");
+        });
+      });
     } else {
       content.innerHTML = `
         <div class="archive-number" id="archive-number"></div>
@@ -227,6 +239,10 @@ document.querySelectorAll("[data-close]").forEach((button) => {
   overlay.addEventListener("mousedown", (event) => {
     if (event.target === overlay) closePanels();
   });
+});
+
+archiveOverlay.addEventListener("click", (event) => {
+  if (event.target.closest("[data-close]")) closePanels();
 });
 
 window.addEventListener("keydown", (event) => {
