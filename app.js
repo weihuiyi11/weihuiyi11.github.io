@@ -174,12 +174,30 @@ launchButton.addEventListener("click", () => {
   launchTransition.hidden = false;
   launchScreen.classList.add("is-launching");
     spaceAudio.currentTime = 0;
-    spaceAudio.play()
-      .then(() => {
-        soundButton.classList.add("active");
-        soundButton.setAttribute("aria-pressed", "true");
-        soundButton.textContent = "声场 开";
-      })
+spaceAudio.volume = 0;
+spaceAudio.play()
+  .then(() => {
+    soundButton.classList.add("active");
+    soundButton.setAttribute("aria-pressed", "true");
+    soundButton.textContent = "声场 开";
+
+    const targetVolume = 0.35; // 最终音量，和你原先设置保持一致
+    const fadeDuration = 2500; // 渐进时长：2500 = 2.5 秒
+    const fadeSteps = 50;
+    const stepTime = fadeDuration / fadeSteps;
+    const volumeStep = targetVolume / fadeSteps;
+
+    const fadeIn = window.setInterval(() => {
+      spaceAudio.volume = Math.min(
+        targetVolume,
+        spaceAudio.volume + volumeStep
+      );
+
+      if (spaceAudio.volume >= targetVolume) {
+        window.clearInterval(fadeIn);
+      }
+    }, stepTime);
+  })
       .catch(() => {
         soundButton.classList.remove("active");
         soundButton.setAttribute("aria-pressed", "false");
