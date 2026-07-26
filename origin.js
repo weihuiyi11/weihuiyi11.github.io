@@ -1,77 +1,47 @@
 (() => {
-  const world = document.querySelector('.origin-world');
-  const backLink = document.querySelector('#back-to-map');
-  const quietButton = document.querySelector('#quiet-mode');
-  const buttons = [...document.querySelectorAll('.record')];
+  const world = document.querySelector('#origin-world');
+  const stage = document.querySelector('#planet-stage');
+  const back = document.querySelector('#back-to-map');
+  const quiet = document.querySelector('#quiet-mode');
+  const shards = [...document.querySelectorAll('.signal-shard')];
   const panels = [...document.querySelectorAll('.record-text')];
+  const index = document.querySelector('#record-index');
+  let quietMode = false;
 
-  // 从第二页的覆盖层进入时，通知父页面关闭覆盖层。这样父页面的
-  // 宇宙和 BGM 都不会被卸载；直接打开本页时仍保留正常的返回逻辑。
-  backLink?.addEventListener('click', (event) => {
-    if (window.parent !== window) {
-      event.preventDefault();
-      window.parent.postMessage({ type: 'why:close-origin' }, window.location.origin);
-      return;
-    }
-    if (window.history.length > 1 && document.referrer) {
-      event.preventDefault();
-      window.history.back();
-    }
+  back.addEventListener('click', () => {
+    if (window.parent !== window) window.parent.postMessage({ type: 'why:close-origin' }, window.location.origin);
+    else if (history.length > 1) history.back(); else location.href = './index.html';
   });
 
-  buttons.forEach((button) => {
-    button.addEventListener('click', () => {
-      const target = button.dataset.record;
-      buttons.forEach((item) => item.classList.toggle('active', item === button));
-      panels.forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === target));
-      world.dataset.panel = target;
-    });
-  });
+  function select(record) {
+    shards.forEach((item) => item.classList.toggle('active', item.dataset.record === record));
+    panels.forEach((item) => item.classList.toggle('active', item.dataset.panel === record));
+    index.textContent = ({now:'01',belief:'02',signal:'03'})[record];
+    world.dataset.record = record;
+  }
+  shards.forEach((shard) => shard.addEventListener('click', () => select(shard.dataset.record)));
 
-  const setQuiet = (enabled) => {
-    world.classList.toggle('quiet', enabled);
-    quietButton?.setAttribute('aria-pressed', String(enabled));
-    if (quietButton) quietButton.textContent = enabled ? '恢复动态' : '减弱动态';
-    try { localStorage.setItem('why-origin-quiet', String(enabled)); } catch (_) {}
-  };
+  stage.addEventListener('pointermove', (event) => {
+    if (quietMode) return;
+    const rect = stage.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - .5;
+    const y = (event.clientY - rect.top) / rect.height - .5;
+    stage.style.setProperty('--px', `${x * 15}px`);
+    stage.style.setProperty('--py', `${y * 11}px`);
+  });
+  stage.addEventListener('pointerleave', () => { stage.style.setProperty('--px','0px'); stage.style.setProperty('--py','0px'); });
+
+  function setQuiet(value) {
+    quietMode = value; world.classList.toggle('quiet', value);
+    quiet.setAttribute('aria-pressed', String(value)); quiet.textContent = value ? '恢复动态' : '减弱动态';
+    try { localStorage.setItem('why-origin-quiet', String(value)); } catch (_) {}
+  }
   try { setQuiet(localStorage.getItem('why-origin-quiet') === 'true'); } catch (_) {}
-  quietButton?.addEventListener('click', () => setQuiet(!world.classList.contains('quiet')));
+  quiet.addEventListener('click', () => setQuiet(!quietMode));
 
-  const canvas = document.querySelector('#cabin-stars');
-  if (!canvas) return;
-  const context = canvas.getContext('2d');
-  let stars = [];
-  let animationId;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  function resize() {
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = innerWidth * ratio;
-    canvas.height = innerHeight * ratio;
-    canvas.style.width = `${innerWidth}px`;
-    canvas.style.height = `${innerHeight}px`;
-    context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    stars = Array.from({ length: Math.max(70, Math.round(innerWidth / 15)) }, () => ({
-      x: Math.random() * innerWidth, y: Math.random() * innerHeight,
-      r: Math.random() * 1.25 + .2, a: Math.random() * .6 + .15,
-      drift: Math.random() * .12 + .02, phase: Math.random() * Math.PI * 2
-    }));
-  }
-  function draw(time = 0) {
-    context.clearRect(0, 0, innerWidth, innerHeight);
-    stars.forEach((star) => {
-      const alpha = star.a * (.72 + Math.sin(time * .0012 + star.phase) * .28);
-      context.fillStyle = `rgba(213,239,255,${alpha})`;
-      context.beginPath();
-      context.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-      context.fill();
-      star.y -= star.drift;
-      if (star.y < -3) { star.y = innerHeight + 3; star.x = Math.random() * innerWidth; }
-    });
-    if (!world.classList.contains('quiet') && !reduced.matches) animationId = requestAnimationFrame(draw);
-  }
-  function restart() { cancelAnimationFrame(animationId); draw(); }
-  resize(); restart();
-  addEventListener('resize', () => { resize(); restart(); });
-  quietButton?.addEventListener('click', () => { cancelAnimationFrame(animationId); if (!world.classList.contains('quiet') && !reduced.matches) restart(); });
+  const canvas = document.querySelector('#origin-dust'); const ctx = canvas.getContext('2d');
+  let particles=[]; let frame=0;
+  function resize(){const r=Math.min(devicePixelRatio||1,2);canvas.width=innerWidth*r;canvas.height=innerHeight*r;ctx.setTransform(r,0,0,r,0,0);particles=Array.from({length:Math.max(80,innerWidth/13)},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.2+.15,a:Math.random()*.5+.12,s:Math.random()*.12+.025,p:Math.random()*6.28}));}
+  function draw(t){ctx.clearRect(0,0,innerWidth,innerHeight);particles.forEach(p=>{ctx.fillStyle=`rgba(255,${150+Math.floor(Math.sin(p.p)*45)},${150+Math.floor(Math.cos(p.p)*60)},${p.a*(.75+Math.sin(t*.001+p.p)*.25)})`;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.283);ctx.fill();p.y-=p.s;if(p.y<0){p.y=innerHeight;p.x=Math.random()*innerWidth;}});if(!quietMode)frame=requestAnimationFrame(draw);}
+  resize(); draw(0); addEventListener('resize',()=>{cancelAnimationFrame(frame);resize();draw(0)}); quiet.addEventListener('click',()=>{cancelAnimationFrame(frame);if(!quietMode)draw(0)});
 })();

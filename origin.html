@@ -3,55 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#020309">
+  <meta name="theme-color" content="#09030f">
   <title>原点星球 · W.H.Y.号</title>
-  <link rel="stylesheet" href="./origin.css?v=20260726-origin-planet">
+  <link rel="stylesheet" href="./origin.css?v=20260726-origin-core">
 </head>
 <body>
   <main class="origin-world" id="origin-world">
-    <canvas id="cabin-stars" aria-hidden="true"></canvas>
-    <div class="deep-space" aria-hidden="true"></div>
+    <canvas id="origin-dust" aria-hidden="true"></canvas>
+    <div class="nebula nebula-one" aria-hidden="true"></div>
+    <div class="nebula nebula-two" aria-hidden="true"></div>
 
     <header class="world-header">
-      <a class="back-link" id="back-to-map" href="./index.html">← 返回宇宙星图</a>
-      <p>W.H.Y.号 · 正在靠近原点星球</p>
+      <button class="back-link" id="back-to-map" type="button">← 返回宇宙星图</button>
+      <p>W.H.Y.号 / 原点星球观测记录</p>
       <span>坐标 00° 00′</span>
     </header>
 
-    <section class="glass-window" aria-label="透过舷窗观察原点星球">
-      <div class="glass-edge" aria-hidden="true"></div>
-      <div class="glass-glow" aria-hidden="true"></div>
-      <div class="glass-reflection reflection-one" aria-hidden="true"></div>
-      <div class="glass-reflection reflection-two" aria-hidden="true"></div>
-      <div class="planet memory-planet" aria-hidden="true"><i></i></div>
-      <div class="planet interest-planet" aria-hidden="true"><i></i></div>
-      <div class="planet origin-planet" aria-label="原点星球"><i></i></div>
-      <div class="orbit orbit-one" aria-hidden="true"></div>
-      <div class="orbit orbit-two" aria-hidden="true"></div>
-      <span class="world-coordinate">ORIGIN PLANET / 2,184 KM</span>
+    <section class="planet-stage" id="planet-stage" aria-label="可探索的原点星球">
+      <div class="planet-aura" aria-hidden="true"></div>
+      <div class="planet-shadow" aria-hidden="true"></div>
+      <div class="origin-planet" id="origin-planet" aria-hidden="true">
+        <div class="planet-core"></div>
+        <div class="planet-crust crust-one"></div><div class="planet-crust crust-two"></div>
+        <div class="lava-stream stream-one"></div><div class="lava-stream stream-two"></div><div class="lava-stream stream-three"></div>
+        <div class="crystal-field"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="planet-shine"></div><div class="planet-night"></div>
+      </div>
+      <div class="orbital-path path-one" aria-hidden="true"></div><div class="orbital-path path-two" aria-hidden="true"></div>
+
+      <button class="signal-shard shard-now active" data-record="now" type="button" aria-label="探索此刻状态"><i></i><span><b>01</b> 此刻状态</span></button>
+      <button class="signal-shard shard-belief" data-record="belief" type="button" aria-label="探索航行准则"><i></i><span><b>02</b> 航行准则</span></button>
+      <button class="signal-shard shard-signal" data-record="signal" type="button" aria-label="探索私人信号"><i></i><span><b>03</b> 私人信号</span></button>
     </section>
 
-    <section class="world-copy" aria-live="polite">
-      <p class="eyebrow">01 / ORIGIN PLANET</p>
-      <h1>此刻的<br><em>辉怡</em></h1>
-      <article class="record-text active" data-panel="now"><p>在地球上研究水与土地，<br>也在自己的宇宙里寻找坐标。</p></article>
-      <article class="record-text" data-panel="belief"><p>方向由自己决定；<br>也认真照看与世界相遇时的自己。</p></article>
-      <article class="record-text" data-panel="signal"><p>走向未知，也珍惜那些<br>会让人认真靠近的情感。</p></article>
+    <section class="planet-record" aria-live="polite">
+      <p class="record-kicker">ORIGIN CORE / <span id="record-index">01</span></p>
+      <article class="record-text active" data-panel="now"><h1>此刻的<br><em>辉怡</em></h1><p>在地球上研究水与土地，<br>也在自己的宇宙里寻找坐标。</p></article>
+      <article class="record-text" data-panel="belief"><h1>方向，<br><em>由自己决定</em></h1><p>认真照看与世界相遇时的自己，<br>但不让无关的目光替我决定方向。</p></article>
+      <article class="record-text" data-panel="signal"><h1>仍会为<br><em>真挚靠近</em>发亮</h1><p>喜欢未知，也珍惜那些<br>让人愿意认真回应的情感。</p></article>
     </section>
 
-    <nav class="record-selector" aria-label="原点星球导航">
-      <p>探索原点星球</p>
-      <button class="record active" data-record="now" type="button"><b>01</b><span>此刻状态<small>现在的我</small></span><i>↗</i></button>
-      <button class="record" data-record="belief" type="button"><b>02</b><span>航行准则<small>如何前行</small></span><i>↗</i></button>
-      <button class="record" data-record="signal" type="button"><b>03</b><span>私人信号<small>喜欢与在意</small></span><i>↗</i></button>
-    </nav>
-
-    <footer class="world-footer">
-      <span><i></i> 观测窗开启</span>
-      <span>原点星球 / 私人航线</span>
-      <button id="quiet-mode" type="button" aria-pressed="false">减弱动态</button>
-    </footer>
+    <div class="interaction-hint" id="interaction-hint"><i></i> 移动光标，感受星球的回应</div>
+    <footer class="world-footer"><span><i></i> 原点星球已苏醒</span><span>点击漂浮晶体，读取一段信号</span><button id="quiet-mode" type="button" aria-pressed="false">减弱动态</button></footer>
   </main>
-  <script src="./origin.js?v=20260726-origin-planet"></script>
+  <script src="./origin.js?v=20260726-origin-core"></script>
 </body>
 </html>
