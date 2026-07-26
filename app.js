@@ -233,7 +233,7 @@ launchButton.addEventListener("click", async () => {
     if (audioStarted) {
       setSoundButton(true);
       // The music becomes audible only after entering the star map, then rises gently.
-      fadeAudioTo(targetVolume, 4000);
+      fadeAudioTo(targetVolume, 7000);
     }
   }, 1450);
 });
