@@ -312,6 +312,77 @@ body {
   *, *:before, *:after { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; }
 }
 
+/* 第二页：留在宇宙里，而不是进入驾驶舱。 */
+.star-map {
+  padding: 22px clamp(26px, 4vw, 72px) 18px;
+  grid-template-rows: auto minmax(580px, 1fr) auto;
+  background: radial-gradient(ellipse at 50% 55%, rgba(17, 31, 65, .16), transparent 52%);
+}
+.map-header { padding-top: 3px; }
+.map-header h2 { font-size: clamp(23px, 2.15vw, 34px); color: rgba(244, 244, 247, .88); }
+.map-kicker { color: rgba(154, 213, 234, .78); }
+.map-actions { position: relative; z-index: 12; }
+.cosmic-map {
+  min-height: 580px;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 4px -2.6vw 0;
+}
+.cosmic-nebula {
+  position: absolute; inset: 0; z-index: -5;
+  background:
+    linear-gradient(90deg, rgba(1, 4, 11, .12), transparent 35%, rgba(2, 4, 11, .2)),
+    url("./star-map-nebula.png") center / cover no-repeat,
+    radial-gradient(ellipse at 82% 17%, #34235f 0, transparent 37%),
+    radial-gradient(ellipse at 10% 79%, #123655 0, transparent 36%), #02040b;
+  transform: scale(1.035);
+  animation: cosmosDrift 28s ease-in-out infinite alternate;
+}
+.cosmic-map::before {
+  content: ""; position: absolute; inset: 0; z-index: -3; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 51%, transparent 0 35%, rgba(2,4,12,.12) 68%, rgba(1,2,7,.58) 100%),
+    linear-gradient(180deg, rgba(2,4,12,.45), transparent 18%, transparent 75%, rgba(2,3,10,.58));
+}
+.cosmic-map::after {
+  content: ""; position: absolute; inset: 0; z-index: -2; pointer-events: none; opacity: .64;
+  background-image: radial-gradient(rgba(255,255,255,.92) 0 1px, transparent 1.5px), radial-gradient(rgba(155,220,255,.72) 0 .8px, transparent 1.5px), radial-gradient(rgba(255,212,172,.85) 0 .9px, transparent 1.5px);
+  background-size: 123px 123px, 79px 79px, 177px 177px;
+  background-position: 13px 17px, 49px 38px, 95px 12px;
+}
+.cosmic-coordinate, .cosmic-instruction { position:absolute; z-index:8; margin:0; letter-spacing:.16em; font-size:9px; }
+.cosmic-coordinate { left:clamp(28px,4vw,72px); top:28px; color:rgba(205,234,243,.54); }
+.cosmic-instruction { right:clamp(28px,4vw,72px); bottom:26px; color:rgba(213,225,243,.38); }
+.starlane { position:absolute; z-index:-1; width:78vw; height:1px; background:linear-gradient(90deg, transparent, rgba(130,211,243,.38), transparent); transform-origin:left; pointer-events:none; opacity:.45; }
+.starlane-one { left:13%; top:51%; transform:rotate(-11deg); }.starlane-two { left:30%; top:70%; transform:rotate(18deg); opacity:.23; }
+.cosmic-map .destination { z-index:5; }
+.cosmic-map .planet { inset:9%; box-shadow: inset -20px -17px 34px rgba(0,0,0,.68), 0 0 26px color-mix(in srgb,var(--planet-color) 34%,transparent); }
+.cosmic-map .planet::before { inset:-13px; border-color:color-mix(in srgb,var(--planet-color) 46%,transparent); box-shadow:0 0 25px color-mix(in srgb,var(--planet-color) 22%,transparent); }
+.cosmic-map .planet-label { min-width:180px; text-shadow:0 3px 18px rgba(0,0,0,.95); }
+.cosmic-map .planet-label b { font-size:16px; letter-spacing:.16em; }
+.cosmic-map .planet-label small { color:rgba(229,239,246,.62); font-size:9px; }
+.cosmic-map .destination-origin .planet { background: radial-gradient(circle at 28% 22%, #fff5c7 0 2.5%, transparent 5%), radial-gradient(circle at 37% 33%, #ffd896 0 10%, #dc8768 29%, #91486d 55%, #321d4a 77%, #080b19 100%); box-shadow:inset -25px -22px 42px rgba(3,1,10,.74), 0 0 74px rgba(242,157,123,.36); }
+.cosmic-map .destination-origin .planet i { left:-34%; right:-34%; height:24%; top:37%; border-color:rgba(255,210,150,.66); box-shadow:0 0 13px rgba(255,197,137,.2); }
+.cosmic-map .destination-memory .planet { background:radial-gradient(circle at 32% 27%,#f4e6ff 0 2%,transparent 5%),radial-gradient(circle at 38% 35%,#d3a8ff 0 10%,#8555ca 37%,#3c256e 68%,#08091b 100%); }
+.cosmic-map .destination-interest .planet { background:radial-gradient(circle at 29% 25%,#e2fbff 0 2%,transparent 5%),radial-gradient(circle at 37% 35%,#8ef4f4 0 10%,#378cac 37%,#153e72 68%,#050c18 100%); }
+.cosmic-map .destination-earth .planet { background:radial-gradient(circle at 27% 23%,#e9ffff 0 2%,transparent 5%),radial-gradient(circle at 39% 37%,#90ebc3 0 9%,#368d72 30%,#1c5079 52%,#0a1d46 75%,#020611 100%); }
+.cosmic-map .destination:hover .planet, .cosmic-map .destination:focus-visible .planet { transform:scale(1.14); box-shadow:inset -20px -17px 34px rgba(0,0,0,.62), 0 0 72px color-mix(in srgb,var(--planet-color) 63%,transparent); }
+.cosmic-map .earth-signal { left:11%; top:73%; z-index:7; }
+.map-footer { position:relative; z-index:11; }
+@keyframes cosmosDrift { from { transform:scale(1.035) translate3d(-.5%, -.4%, 0); } to { transform:scale(1.07) translate3d(.6%, .4%, 0); } }
+
+@media (max-width: 780px) {
+  .star-map { padding:20px 18px 14px; height:100svh; grid-template-rows:auto minmax(620px, 1fr) auto; }
+  .cosmic-map { min-height:620px; margin:0 -18px; }
+  .cosmic-coordinate { left:22px; top:20px; font-size:7px; }.cosmic-instruction { left:22px; right:22px; bottom:22px; font-size:7px; }
+  .cosmic-map .destination-origin { --planet-x:49%!important; --planet-y:48%!important; }
+  .cosmic-map .destination-memory { --planet-x:22%!important; --planet-y:25%!important; }
+  .cosmic-map .destination-interest { --planet-x:78%!important; --planet-y:25%!important; }
+  .cosmic-map .destination-earth { --planet-x:73%!important; --planet-y:72%!important; }
+  .cosmic-map .planet-label { min-width:0; left:50%!important; right:auto!important; top:calc(100% + 8px)!important; transform:translateX(-50%); text-align:center!important; }
+  .cosmic-map .planet-label small { display:none; }.cosmic-map .planet-label b { font-size:13px; }
+}
+
 /* 首页星图：不再是悬浮信息板，而是 W.H.Y. 号的舱内主舷窗。 */
 .star-map {
   padding: 28px clamp(28px, 3.9vw, 74px) 22px;

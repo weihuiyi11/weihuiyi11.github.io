@@ -53,43 +53,26 @@
         </nav>
       </header>
 
-      <div class="map-viewport cabin-map">
-        <div class="cabin-arch" aria-hidden="true"></div>
-        <section class="observation-window" aria-label="W.H.Y.号主舷窗，窗外为私人星图">
-          <div class="window-sky" aria-hidden="true"></div>
-          <div class="window-reflection" aria-hidden="true"></div>
-          <p class="window-label">主舷窗 / PRIVATE UNIVERSE</p>
-          <div class="window-coordinate">当前航线 · 未知星域</div>
+      <div class="map-viewport cosmic-map">
+        <div class="cosmic-nebula" aria-hidden="true"></div>
+        <div class="starlane starlane-one" aria-hidden="true"></div>
+        <div class="starlane starlane-two" aria-hidden="true"></div>
+        <p class="cosmic-coordinate">PRIVATE UNIVERSE · 当前航线：未知星域</p>
+        <p class="cosmic-instruction">靠近一颗星球，读一段正在发生的生活</p>
 
-          <button class="destination destination-origin" type="button" data-destination="origin" style="--planet-color:#f6c987;--planet-x:46%;--planet-y:52%;--planet-size:142px" aria-label="前往原点星球：此刻的我">
-            <span class="planet"><i></i></span><span class="planet-label"><b>原点星球</b><small>此刻的我</small></span>
-          </button>
-          <button class="destination destination-memory" type="button" data-destination="memory" style="--planet-color:#bc8cff;--planet-x:19%;--planet-y:30%;--planet-size:86px" aria-label="前往记忆星云：照片、朋友与走过的地方">
-            <span class="planet"><i></i></span><span class="planet-label"><b>记忆星云</b><small>照片、朋友与走过的地方</small></span>
-          </button>
-          <button class="destination destination-interest" type="button" data-destination="interest" style="--planet-color:#67d9ee;--planet-x:78%;--planet-y:31%;--planet-size:76px" aria-label="前往兴趣卫星群：我最近喜欢的一切">
-            <span class="planet"><i></i></span><span class="planet-label"><b>兴趣卫星群</b><small>我最近喜欢的一切</small></span>
-          </button>
-          <button class="destination destination-earth" type="button" data-destination="earth" style="--planet-color:#6ed6a5;--planet-x:73%;--planet-y:73%;--planet-size:90px" aria-label="前往地球观测站：全国流域观测任务">
-            <span class="planet"><i></i></span><span class="planet-label"><b>地球观测站</b><small>全国流域观测任务</small></span>
-          </button>
-          <button class="earth-signal" id="earth-signal" type="button"><span class="signal-ripple ripple-one"></span><span class="signal-ripple ripple-two"></span><span class="signal-core">✦</span><span class="signal-label"><b>来自地球的信号</b><small>1 条未读消息</small></span></button>
-        </section>
-
-        <aside class="cabin-brief">
-          <p class="panel-eyebrow">W.H.Y.号 / 航行中</p>
-          <h3>此刻的<br><em>辉怡</em></h3>
-          <p>在地球上研究水与土地，<br>也在自己的宇宙里寻找坐标。</p>
-          <div class="brief-meter"><span>舱压稳定</span><i></i><b>98.7%</b></div>
-        </aside>
-
-        <nav class="cabin-navigation" aria-label="舱内航行导航">
-          <div class="nav-heading"><span>航行导航</span><small>选择一处坐标</small></div>
-          <button class="cabin-nav-item is-active" type="button" data-destination="origin"><i>01</i><span><b>原点星球</b><small>此刻的我</small></span><em>↗</em></button>
-          <button class="cabin-nav-item" type="button" data-destination="memory"><i>02</i><span><b>记忆星云</b><small>照片与走过的地方</small></span><em>↗</em></button>
-          <button class="cabin-nav-item" type="button" data-destination="interest"><i>03</i><span><b>兴趣卫星群</b><small>最近喜欢的一切</small></span><em>↗</em></button>
-          <button class="cabin-nav-item" type="button" data-destination="earth"><i>04</i><span><b>地球观测站</b><small>全国流域观测任务</small></span><em>↗</em></button>
-        </nav>
+        <button class="destination destination-origin" type="button" data-destination="origin" style="--planet-color:#f6c987;--planet-x:47%;--planet-y:53%;--planet-size:168px" aria-label="前往原点星球：此刻的我">
+          <span class="planet"><i></i></span><span class="planet-label"><b>原点星球</b><small>此刻的我 · 01</small></span>
+        </button>
+        <button class="destination destination-memory" type="button" data-destination="memory" style="--planet-color:#bc8cff;--planet-x:18%;--planet-y:28%;--planet-size:102px" aria-label="前往记忆星云：照片、朋友与走过的地方">
+          <span class="planet"><i></i></span><span class="planet-label"><b>记忆星云</b><small>照片、朋友与走过的地方</small></span>
+        </button>
+        <button class="destination destination-interest" type="button" data-destination="interest" style="--planet-color:#67d9ee;--planet-x:79%;--planet-y:27%;--planet-size:86px" aria-label="前往兴趣卫星群：我最近喜欢的一切">
+          <span class="planet"><i></i></span><span class="planet-label"><b>兴趣卫星群</b><small>最近喜欢的一切</small></span>
+        </button>
+        <button class="destination destination-earth" type="button" data-destination="earth" style="--planet-color:#6ed6a5;--planet-x:76%;--planet-y:74%;--planet-size:112px" aria-label="前往地球观测站：全国流域观测任务">
+          <span class="planet"><i></i></span><span class="planet-label"><b>地球观测站</b><small>全国流域观测任务</small></span>
+        </button>
+        <button class="earth-signal" id="earth-signal" type="button"><span class="signal-ripple ripple-one"></span><span class="signal-ripple ripple-two"></span><span class="signal-core">✦</span><span class="signal-label"><b>来自地球的信号</b><small>1 条未读消息</small></span></button>
       </div>
 
       <footer class="map-footer">
@@ -156,6 +139,6 @@
     </div>
   </main>
 
-  <script src="./app.js?v=20260724-cabin-window-1"></script>
+  <script src="./app.js?v=20260725-cosmic-map-1"></script>
 </body>
 </html>
