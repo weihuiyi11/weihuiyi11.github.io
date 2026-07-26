@@ -3,78 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#030711">
-  <title>原点观测舱 · W.H.Y.号</title>
-  <link rel="stylesheet" href="./origin.css">
+  <meta name="theme-color" content="#020309">
+  <title>原点星球 · W.H.Y.号</title>
+  <link rel="stylesheet" href="./origin.css?v=20260725-origin-world">
 </head>
 <body>
-  <main class="observatory" id="observatory">
+  <main class="origin-world" id="origin-world">
     <canvas id="cabin-stars" aria-hidden="true"></canvas>
-    <div class="nebula" aria-hidden="true"></div>
-    <div class="hull hull-left" aria-hidden="true"></div>
-    <div class="hull hull-right" aria-hidden="true"></div>
-    <header class="bridge-header">
+    <div class="deep-space" aria-hidden="true"></div>
+
+    <header class="world-header">
       <a class="back-link" href="./index.html">← 返回私人星图</a>
-      <p>W.H.Y.号 · 原点观测舱</p>
-      <span>舱内时间 · 2026.07</span>
+      <p>W.H.Y.号 · 正在靠近原点星球</p>
+      <span>坐标 00° 00′</span>
     </header>
 
-    <section class="window-bay" aria-label="原点星球舷窗">
-      <div class="window-frame">
-        <div class="space-window">
-          <div class="far-stars" aria-hidden="true"></div>
-          <div class="planet-ring ring-a" aria-hidden="true"></div>
-          <div class="planet-ring ring-b" aria-hidden="true"></div>
-          <div class="origin-planet" aria-label="原点星球"></div>
-          <div class="window-reflection" aria-hidden="true"></div>
-          <p>ORIGIN PLANET · DISTANCE 2,184 KM</p>
-        </div>
-      </div>
-      <div class="window-strut strut-left" aria-hidden="true"></div>
-      <div class="window-strut strut-right" aria-hidden="true"></div>
+    <section class="glass-window" aria-label="透过舷窗观察原点星球">
+      <div class="glass-edge" aria-hidden="true"></div>
+      <div class="glass-glow" aria-hidden="true"></div>
+      <div class="glass-reflection reflection-one" aria-hidden="true"></div>
+      <div class="glass-reflection reflection-two" aria-hidden="true"></div>
+
+      <div class="planet memory-planet" aria-hidden="true"><i></i></div>
+      <div class="planet interest-planet" aria-hidden="true"><i></i></div>
+      <div class="planet origin-planet" aria-label="原点星球"><i></i></div>
+      <div class="orbit orbit-one" aria-hidden="true"></div>
+      <div class="orbit orbit-two" aria-hidden="true"></div>
+      <span class="world-coordinate">ORIGIN PLANET / 2,184 KM</span>
     </section>
 
-    <aside class="pilot-panel">
-      <span class="panel-label">PILOT / 001</span>
+    <section class="world-copy" aria-live="polite">
+      <p class="eyebrow">01 / ORIGIN PLANET</p>
       <h1>此刻的<br><em>辉怡</em></h1>
-      <p class="pilot-intro">在地球上研究水与土地，<br>也在自己的宇宙里寻找坐标。</p>
-      <dl>
-        <div><dt>当前身份</dt><dd>地理学研究生</dd></div>
-        <div><dt>所在地点</dt><dd>中国科学院地理资源所</dd></div>
-        <div><dt>航行状态</dt><dd><i></i>短暂悠闲 · 正在蓄能</dd></div>
-      </dl>
-    </aside>
-
-    <nav class="record-selector" aria-label="航行员记录">
-      <p>PERSONAL RECORDS</p>
-      <button class="record active" data-record="now"><b>01</b><span>此刻状态</span><i>↗</i></button>
-      <button class="record" data-record="belief"><b>02</b><span>航行准则</span><i>↗</i></button>
-      <button class="record" data-record="signal"><b>03</b><span>私人信号</span><i>↗</i></button>
-    </nav>
-
-    <section class="holo-reader" aria-live="polite">
       <article class="record-text active" data-panel="now">
-        <span>01 / CURRENT FLIGHT</span>
-        <h2>在忙碌靠近前，<br>先把自己记录下来。</h2>
-        <p>眼下的航程难得安静。一个月后，研究任务会重新拉满；所以她把这段空隙留给自己，也留给这艘慢慢成形的船。</p>
+        <p>在地球上研究水与土地，<br>也在自己的宇宙里寻找坐标。</p>
       </article>
       <article class="record-text" data-panel="belief">
-        <span>02 / FLIGHT RULE</span>
-        <h2>不必活得<br>太小心。</h2>
-        <p>小时候相信“走自己的路”。现在知道印象会影响关系与资源，于是认真照看自己在世界里的样子；但不让无关的目光替自己决定方向。</p>
+        <p>方向由自己决定；<br>也认真照看与世界相遇时的自己。</p>
       </article>
       <article class="record-text" data-panel="signal">
-        <span>03 / PRIVATE SIGNAL</span>
-        <h2>喜欢未知，<br>也很需要情感。</h2>
-        <p>她愿意走向难一点的事，也会被真挚的关系和情绪浓烈的故事打动。表面有些炸炸呼呼，内里却始终认真回应靠近。</p>
+        <p>走向未知，也珍惜那些<br>会让人认真靠近的情感。</p>
       </article>
     </section>
 
-    <footer class="console">
-      <span><i></i> 舱压稳定</span><span class="sweep"><b></b></span><span>观测模式 · 私人</span>
+    <nav class="record-selector" aria-label="原点星球导航">
+      <p>探索原点星球</p>
+      <button class="record active" data-record="now" type="button"><b>01</b><span>此刻状态<small>现在的我</small></span><i>↗</i></button>
+      <button class="record" data-record="belief" type="button"><b>02</b><span>航行准则<small>如何前行</small></span><i>↗</i></button>
+      <button class="record" data-record="signal" type="button"><b>03</b><span>私人信号<small>喜欢与在意</small></span><i>↗</i></button>
+    </nav>
+
+    <footer class="world-footer">
+      <span><i></i> 观测窗开启</span>
+      <span>原点星球 / 私人航线</span>
       <button id="quiet-mode" type="button">减弱动态</button>
     </footer>
   </main>
-  <script src="./origin.js"></script>
+  <script src="./origin.js?v=20260725-origin-world"></script>
 </body>
 </html>
