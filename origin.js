@@ -1,13 +1,71 @@
-const canvas = document.querySelector('#cabin-stars');
-const ctx = canvas.getContext('2d');
-let stars = [];
-function resize(){
-  const ratio = Math.min(devicePixelRatio || 1, 2); const w = innerWidth; const h = innerHeight;
-  canvas.width=w*ratio; canvas.height=h*ratio; canvas.style.width=w+'px'; canvas.style.height=h+'px'; ctx.setTransform(ratio,0,0,ratio,0,0);
-  let seed=719; const random=()=>((seed=(seed*16807)%2147483647)/2147483647);
-  stars=Array.from({length:Math.max(150,Math.min(320,w*h/7200))},()=>({x:random()*w,y:random()*h,r:random()*1.05+.18,a:random()*.55+.18,p:random()*6.28}));
-}
-function paint(t){ctx.clearRect(0,0,innerWidth,innerHeight);stars.forEach(s=>{ctx.fillStyle=`rgba(210,235,255,${s.a*(.7+Math.sin(t*.001+s.p)*.3)})`;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);ctx.fill()});if(!document.body.classList.contains('quiet'))requestAnimationFrame(paint)}
-resize();addEventListener('resize',resize);requestAnimationFrame(paint);
-document.querySelectorAll('.record').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.record,.record-text').forEach(el=>el.classList.remove('active'));button.classList.add('active');document.querySelector(`[data-panel="${button.dataset.record}"]`).classList.add('active');document.querySelector('.world-copy .eyebrow').textContent=`0${['now','belief','signal'].indexOf(button.dataset.record)+1} / ${button.dataset.record==='now'?'ORIGIN PLANET':button.dataset.record==='belief'?'FLIGHT RULE':'PRIVATE SIGNAL'}`}));
-document.querySelector('#quiet-mode').addEventListener('click',e=>{document.body.classList.toggle('quiet');e.currentTarget.textContent=document.body.classList.contains('quiet')?'恢复动态':'减弱动态';if(!document.body.classList.contains('quiet'))requestAnimationFrame(paint)});
+(() => {
+  const world = document.querySelector('.origin-world');
+  const backLink = document.querySelector('#back-to-map');
+  const quietButton = document.querySelector('#quiet-mode');
+  const buttons = [...document.querySelectorAll('.record')];
+  const panels = [...document.querySelectorAll('.record-text')];
+
+  // 从宇宙星图进入时，返回浏览历史中的第二页；直接打开本页才回首页。
+  backLink?.addEventListener('click', (event) => {
+    if (window.history.length > 1 && document.referrer) {
+      event.preventDefault();
+      window.history.back();
+    }
+  });
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const target = button.dataset.record;
+      buttons.forEach((item) => item.classList.toggle('active', item === button));
+      panels.forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === target));
+      world.dataset.panel = target;
+    });
+  });
+
+  const setQuiet = (enabled) => {
+    world.classList.toggle('quiet', enabled);
+    quietButton?.setAttribute('aria-pressed', String(enabled));
+    if (quietButton) quietButton.textContent = enabled ? '恢复动态' : '减弱动态';
+    try { localStorage.setItem('why-origin-quiet', String(enabled)); } catch (_) {}
+  };
+  try { setQuiet(localStorage.getItem('why-origin-quiet') === 'true'); } catch (_) {}
+  quietButton?.addEventListener('click', () => setQuiet(!world.classList.contains('quiet')));
+
+  const canvas = document.querySelector('#cabin-stars');
+  if (!canvas) return;
+  const context = canvas.getContext('2d');
+  let stars = [];
+  let animationId;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function resize() {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = innerWidth * ratio;
+    canvas.height = innerHeight * ratio;
+    canvas.style.width = `${innerWidth}px`;
+    canvas.style.height = `${innerHeight}px`;
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
+    stars = Array.from({ length: Math.max(70, Math.round(innerWidth / 15)) }, () => ({
+      x: Math.random() * innerWidth, y: Math.random() * innerHeight,
+      r: Math.random() * 1.25 + .2, a: Math.random() * .6 + .15,
+      drift: Math.random() * .12 + .02, phase: Math.random() * Math.PI * 2
+    }));
+  }
+  function draw(time = 0) {
+    context.clearRect(0, 0, innerWidth, innerHeight);
+    stars.forEach((star) => {
+      const alpha = star.a * (.72 + Math.sin(time * .0012 + star.phase) * .28);
+      context.fillStyle = `rgba(213,239,255,${alpha})`;
+      context.beginPath();
+      context.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+      context.fill();
+      star.y -= star.drift;
+      if (star.y < -3) { star.y = innerHeight + 3; star.x = Math.random() * innerWidth; }
+    });
+    if (!world.classList.contains('quiet') && !reduced.matches) animationId = requestAnimationFrame(draw);
+  }
+  function restart() { cancelAnimationFrame(animationId); draw(); }
+  resize(); restart();
+  addEventListener('resize', () => { resize(); restart(); });
+  quietButton?.addEventListener('click', () => { cancelAnimationFrame(animationId); if (!world.classList.contains('quiet') && !reduced.matches) restart(); });
+})();

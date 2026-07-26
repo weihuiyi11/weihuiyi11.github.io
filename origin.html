@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#020309">
   <title>原点星球 · W.H.Y.号</title>
-  <link rel="stylesheet" href="./origin.css?v=20260725-origin-world">
+  <link rel="stylesheet" href="./origin.css?v=20260726-origin-planet">
 </head>
 <body>
   <main class="origin-world" id="origin-world">
@@ -13,7 +13,7 @@
     <div class="deep-space" aria-hidden="true"></div>
 
     <header class="world-header">
-      <a class="back-link" href="./index.html">← 返回私人星图</a>
+      <a class="back-link" id="back-to-map" href="./index.html">← 返回宇宙星图</a>
       <p>W.H.Y.号 · 正在靠近原点星球</p>
       <span>坐标 00° 00′</span>
     </header>
@@ -23,7 +23,6 @@
       <div class="glass-glow" aria-hidden="true"></div>
       <div class="glass-reflection reflection-one" aria-hidden="true"></div>
       <div class="glass-reflection reflection-two" aria-hidden="true"></div>
-
       <div class="planet memory-planet" aria-hidden="true"><i></i></div>
       <div class="planet interest-planet" aria-hidden="true"><i></i></div>
       <div class="planet origin-planet" aria-label="原点星球"><i></i></div>
@@ -35,15 +34,9 @@
     <section class="world-copy" aria-live="polite">
       <p class="eyebrow">01 / ORIGIN PLANET</p>
       <h1>此刻的<br><em>辉怡</em></h1>
-      <article class="record-text active" data-panel="now">
-        <p>在地球上研究水与土地，<br>也在自己的宇宙里寻找坐标。</p>
-      </article>
-      <article class="record-text" data-panel="belief">
-        <p>方向由自己决定；<br>也认真照看与世界相遇时的自己。</p>
-      </article>
-      <article class="record-text" data-panel="signal">
-        <p>走向未知，也珍惜那些<br>会让人认真靠近的情感。</p>
-      </article>
+      <article class="record-text active" data-panel="now"><p>在地球上研究水与土地，<br>也在自己的宇宙里寻找坐标。</p></article>
+      <article class="record-text" data-panel="belief"><p>方向由自己决定；<br>也认真照看与世界相遇时的自己。</p></article>
+      <article class="record-text" data-panel="signal"><p>走向未知，也珍惜那些<br>会让人认真靠近的情感。</p></article>
     </section>
 
     <nav class="record-selector" aria-label="原点星球导航">
@@ -56,9 +49,9 @@
     <footer class="world-footer">
       <span><i></i> 观测窗开启</span>
       <span>原点星球 / 私人航线</span>
-      <button id="quiet-mode" type="button">减弱动态</button>
+      <button id="quiet-mode" type="button" aria-pressed="false">减弱动态</button>
     </footer>
   </main>
-  <script src="./origin.js?v=20260725-origin-world"></script>
+  <script src="./origin.js?v=20260726-origin-planet"></script>
 </body>
 </html>
