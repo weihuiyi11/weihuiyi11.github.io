@@ -316,7 +316,10 @@ body {
 .star-map {
   padding: 22px clamp(26px, 4vw, 72px) 18px;
   grid-template-rows: auto minmax(580px, 1fr) auto;
-  background: radial-gradient(ellipse at 50% 55%, rgba(17, 31, 65, .16), transparent 52%);
+  background:
+    linear-gradient(180deg, rgba(2, 5, 13, .12), rgba(2, 5, 13, .05) 35%, rgba(2, 4, 12, .22)),
+    url("./star-map-nebula.png") center / cover no-repeat,
+    #030714;
 }
 .map-header { padding-top: 3px; }
 .map-header h2 { font-size: clamp(23px, 2.15vw, 34px); color: rgba(244, 244, 247, .88); }
@@ -332,9 +335,8 @@ body {
   position: absolute; inset: 0; z-index: -5;
   background:
     linear-gradient(90deg, rgba(1, 4, 11, .12), transparent 35%, rgba(2, 4, 11, .2)),
-    url("./star-map-nebula.png") center / cover no-repeat,
     radial-gradient(ellipse at 82% 17%, #34235f 0, transparent 37%),
-    radial-gradient(ellipse at 10% 79%, #123655 0, transparent 36%), #02040b;
+    radial-gradient(ellipse at 10% 79%, #123655 0, transparent 36%);
   transform: scale(1.035);
   animation: cosmosDrift 28s ease-in-out infinite alternate;
 }
@@ -349,6 +351,29 @@ body {
   background-image: radial-gradient(rgba(255,255,255,.92) 0 1px, transparent 1.5px), radial-gradient(rgba(155,220,255,.72) 0 .8px, transparent 1.5px), radial-gradient(rgba(255,212,172,.85) 0 .9px, transparent 1.5px);
   background-size: 123px 123px, 79px 79px, 177px 177px;
   background-position: 13px 17px, 49px 38px, 95px 12px;
+  animation: starVeilDrift 42s linear infinite alternate, starVeilTwinkle 7s ease-in-out infinite alternate;
+}
+.cosmic-star-motion {
+  position: absolute; inset: -12%; z-index: -1; pointer-events: none;
+  opacity: .48;
+  will-change: transform, opacity;
+}
+.cosmic-star-motion-near {
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.92) 0 1px, transparent 1.8px),
+    radial-gradient(circle, rgba(181,228,255,.78) 0 .75px, transparent 1.55px);
+  background-size: 186px 186px, 113px 113px;
+  background-position: 17px 33px, 63px 12px;
+  animation: nearStarsDrift 24s linear infinite alternate;
+}
+.cosmic-star-motion-far {
+  opacity: .35;
+  background-image:
+    radial-gradient(circle, rgba(213,228,255,.78) 0 .7px, transparent 1.3px),
+    radial-gradient(circle, rgba(255,216,173,.78) 0 .7px, transparent 1.3px);
+  background-size: 92px 92px, 151px 151px;
+  background-position: 41px 18px, 10px 67px;
+  animation: farStarsDrift 58s linear infinite alternate;
 }
 .cosmic-coordinate, .cosmic-instruction { position:absolute; z-index:8; margin:0; letter-spacing:.16em; font-size:9px; }
 .cosmic-coordinate { left:clamp(28px,4vw,72px); top:28px; color:rgba(205,234,243,.54); }
@@ -370,6 +395,10 @@ body {
 .cosmic-map .earth-signal { left:11%; top:73%; z-index:7; }
 .map-footer { position:relative; z-index:11; }
 @keyframes cosmosDrift { from { transform:scale(1.035) translate3d(-.5%, -.4%, 0); } to { transform:scale(1.07) translate3d(.6%, .4%, 0); } }
+@keyframes starVeilDrift { from { background-position:13px 17px,49px 38px,95px 12px; } to { background-position:59px -29px,10px 84px,137px -47px; } }
+@keyframes starVeilTwinkle { from { opacity:.42; } to { opacity:.72; } }
+@keyframes nearStarsDrift { from { transform:translate3d(-1.2%, -.8%, 0); } to { transform:translate3d(2%, 1.5%, 0); } }
+@keyframes farStarsDrift { from { transform:translate3d(1.1%, .6%, 0); } to { transform:translate3d(-1.4%, -1.1%, 0); } }
 
 /* 第二页微交互：星球仍然留在宇宙里，靠近时才亮出它的坐标。 */
 .cosmic-map .destination {
