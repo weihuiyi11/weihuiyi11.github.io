@@ -5,8 +5,14 @@
   const buttons = [...document.querySelectorAll('.record')];
   const panels = [...document.querySelectorAll('.record-text')];
 
-  // 从宇宙星图进入时，返回浏览历史中的第二页；直接打开本页才回首页。
+  // 从第二页的覆盖层进入时，通知父页面关闭覆盖层。这样父页面的
+  // 宇宙和 BGM 都不会被卸载；直接打开本页时仍保留正常的返回逻辑。
   backLink?.addEventListener('click', (event) => {
+    if (window.parent !== window) {
+      event.preventDefault();
+      window.parent.postMessage({ type: 'why:close-origin' }, window.location.origin);
+      return;
+    }
     if (window.history.length > 1 && document.referrer) {
       event.preventDefault();
       window.history.back();

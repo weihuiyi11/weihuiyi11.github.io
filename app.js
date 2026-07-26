@@ -66,6 +66,49 @@ const archiveOverlay = document.querySelector("#archive-overlay");
 const signalOverlay = document.querySelector("#signal-overlay");
 const mapViewport = document.querySelector(".cosmic-map");
 let isApproachingDestination = false;
+let originFrame = null;
+
+function openOriginPlanet(button) {
+  // Keep the star map document alive beneath the planet. This lets the BGM
+  // continue without restarting and keeps every other planet in its position.
+  mapViewport.classList.remove("is-approaching");
+  button.classList.remove("is-approaching");
+  isApproachingDestination = false;
+
+  originFrame = document.createElement("iframe");
+  originFrame.src = "./origin.html";
+  originFrame.title = "原点星球";
+  originFrame.setAttribute("allow", "autoplay");
+  originFrame.style.cssText = [
+    "position:fixed", "z-index:100", "inset:0", "width:100vw", "height:100vh",
+    "border:0", "background:#02040c", "opacity:0", "transition:opacity .42s ease",
+    "box-shadow:0 0 80px rgba(0,0,0,.6)"
+  ].join(";");
+  document.body.append(originFrame);
+  requestAnimationFrame(() => { if (originFrame) originFrame.style.opacity = "1"; });
+}
+
+function closeOriginPlanet() {
+  if (!originFrame) return;
+  const frame = originFrame;
+  originFrame = null;
+  frame.style.opacity = "0";
+  window.setTimeout(() => frame.remove(), 430);
+  // Defensive reset: the map must never remain in its approach-only state.
+  mapViewport.classList.remove("is-approaching");
+  document.querySelectorAll("[data-destination]").forEach((item) => item.classList.remove("is-approaching"));
+  isApproachingDestination = false;
+}
+
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "why:close-origin" && event.source === originFrame?.contentWindow) {
+    closeOriginPlanet();
+  }
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && originFrame) closeOriginPlanet();
+});
 
 function createStarfield() {
   const canvas = document.querySelector("#starfield");
@@ -239,6 +282,7 @@ launchButton.addEventListener("click", async () => {
 });
 
 document.querySelector("#return-outside").addEventListener("click", () => {
+  closeOriginPlanet();
   cancelFade();
   spaceAudio.pause();
   spaceAudio.currentTime = 0;
@@ -282,7 +326,7 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
     button.classList.add("is-approaching");
 
     if (button.dataset.destination === "origin") {
-      window.setTimeout(() => window.location.assign("./origin.html"), 720);
+      window.setTimeout(() => openOriginPlanet(button), 720);
       return;
     }
     const item = destinations[button.dataset.destination];
