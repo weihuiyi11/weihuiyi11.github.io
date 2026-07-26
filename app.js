@@ -168,64 +168,82 @@ function closePanels() {
   signalOverlay.hidden = true;
 }
 
-launchButton.addEventListener("click", () => {
+const spaceAudio = new Audio("tattooedpreacher-above-earth-8672.mp3");
+spaceAudio.loop = true;
+spaceAudio.preload = "auto";
+spaceAudio.volume = 0;
+
+const soundButton = document.querySelector("#sound-button");
+const targetVolume = 0.35;
+let fadeTimer = null;
+
+function setSoundButton(isEnabled) {
+  soundButton.classList.toggle("active", isEnabled);
+  soundButton.setAttribute("aria-pressed", String(isEnabled));
+  soundButton.textContent = isEnabled ? "声场 开" : "声场 关";
+}
+
+function cancelFade() {
+  if (fadeTimer) {
+    window.clearInterval(fadeTimer);
+    fadeTimer = null;
+  }
+}
+
+function fadeAudioTo(volume, duration) {
+  cancelFade();
+  const startVolume = spaceAudio.volume;
+  const startedAt = performance.now();
+
+  fadeTimer = window.setInterval(() => {
+    const progress = Math.min(1, (performance.now() - startedAt) / duration);
+    spaceAudio.volume = startVolume + (volume - startVolume) * progress;
+
+    if (progress === 1) {
+      cancelFade();
+    }
+  }, 40);
+}
+
+launchButton.addEventListener("click", async () => {
   launchButton.disabled = true;
   launchButton.querySelector("span").textContent = "航行者身份确认中";
   launchTransition.hidden = false;
   launchScreen.classList.add("is-launching");
-    spaceAudio.currentTime = 0;
-spaceAudio.volume = 0;
-spaceAudio.play()
-  .then(() => {
-    soundButton.classList.add("active");
-    soundButton.setAttribute("aria-pressed", "true");
-    soundButton.textContent = "声场 开";
 
-    const targetVolume = 0.35; // 最终音量，和你原先设置保持一致
-    const fadeDuration = 2500; // 渐进时长：2500 = 2.5 秒
-    const fadeSteps = 50;
-    const stepTime = fadeDuration / fadeSteps;
-    const volumeStep = targetVolume / fadeSteps;
-
-    const fadeIn = window.setInterval(() => {
-      spaceAudio.volume = Math.min(
-        targetVolume,
-        spaceAudio.volume + volumeStep
-      );
-
-      if (spaceAudio.volume >= targetVolume) {
-        window.clearInterval(fadeIn);
-      }
-    }, stepTime);
-  })
-      .catch(() => {
-        soundButton.classList.remove("active");
-        soundButton.setAttribute("aria-pressed", "false");
-        soundButton.textContent = "声场 关";
-      });
-  // 在点击“开始航行”时先静音启动，避免浏览器拦截自动播放
+  // Start muted inside the user's click, so browsers allow playback.
+  cancelFade();
+  spaceAudio.currentTime = 0;
   spaceAudio.volume = 0;
-  const audioStarted = spaceAudio.play()
-    .then(() => true)
-    .catch(() => false);
+  let audioStarted = false;
 
-  window.setTimeout(async () => {
+  try {
+    await spaceAudio.play();
+    audioStarted = true;
+  } catch (error) {
+    setSoundButton(false);
+  }
+
+  window.setTimeout(() => {
     launchScreen.hidden = true;
     launchTransition.hidden = true;
     starMap.hidden = false;
     siteShell.classList.add("is-launched");
 
-    if (await audioStarted) {
-      spaceAudio.volume = 0.35;
-      const soundButton = document.querySelector("#sound-button");
-      soundButton.classList.add("active");
-      soundButton.setAttribute("aria-pressed", "true");
-      soundButton.textContent = "声场 开";
+    if (audioStarted) {
+      setSoundButton(true);
+      // The music becomes audible only after entering the star map, then rises gently.
+      fadeAudioTo(targetVolume, 4000);
     }
   }, 1450);
 });
 
 document.querySelector("#return-outside").addEventListener("click", () => {
+  cancelFade();
+  spaceAudio.pause();
+  spaceAudio.currentTime = 0;
+  spaceAudio.volume = 0;
+  setSoundButton(false);
   closePanels();
   starMap.hidden = true;
   launchScreen.hidden = false;
@@ -235,29 +253,25 @@ document.querySelector("#return-outside").addEventListener("click", () => {
   launchButton.querySelector("span").textContent = "开始航行";
 });
 
-const spaceAudio = new Audio("tattooedpreacher-above-earth-8672.mp3");
-spaceAudio.loop = true;
-spaceAudio.preload = "auto";
-spaceAudio.volume = 0.35;
-
-document.querySelector("#sound-button").addEventListener("click", async (event) => {
-  const button = event.currentTarget;
-  const shouldEnable = !button.classList.contains("active");
+soundButton.addEventListener("click", async () => {
+  const shouldEnable = !soundButton.classList.contains("active");
+  cancelFade();
 
   if (shouldEnable) {
     try {
+      spaceAudio.volume = 0;
       await spaceAudio.play();
+      setSoundButton(true);
+      fadeAudioTo(targetVolume, 1500);
     } catch (error) {
-      button.textContent = "声场加载失败";
-      return;
+      setSoundButton(false);
+      soundButton.textContent = "声场加载失败";
     }
   } else {
     spaceAudio.pause();
+    spaceAudio.volume = 0;
+    setSoundButton(false);
   }
-
-  button.classList.toggle("active", shouldEnable);
-  button.setAttribute("aria-pressed", String(shouldEnable));
-  button.textContent = shouldEnable ? "声场 开" : "声场 关";
 });
 
 document.querySelectorAll("[data-destination]").forEach((button) => {
