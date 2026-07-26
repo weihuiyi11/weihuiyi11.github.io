@@ -192,75 +192,26 @@ document.querySelector("#return-outside").addEventListener("click", () => {
   launchButton.querySelector("span").textContent = "开始航行";
 });
 
-// A small, original Web Audio soundscape: no external music file, no autoplay,
-// and no copyright/licensing dependency for the GitHub Pages site.
-let soundscape = null;
-
-function createSoundscape() {
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContext) return null;
-
-  const context = new AudioContext();
-  const master = context.createGain();
-  master.gain.value = 0;
-  master.connect(context.destination);
-
-  // Soft filtered noise creates the distant, airy part of the universe sound.
-  const noiseBuffer = context.createBuffer(1, context.sampleRate * 3, context.sampleRate);
-  const samples = noiseBuffer.getChannelData(0);
-  for (let index = 0; index < samples.length; index += 1) {
-    samples[index] = Math.random() * 2 - 1;
-  }
-  const noise = context.createBufferSource();
-  noise.buffer = noiseBuffer;
-  noise.loop = true;
-  const filter = context.createBiquadFilter();
-  filter.type = "bandpass";
-  filter.frequency.value = 690;
-  filter.Q.value = 0.22;
-  const noiseGain = context.createGain();
-  noiseGain.gain.value = 0.028;
-  noise.connect(filter).connect(noiseGain).connect(master);
-
-  // Two very quiet, detuned tones give the sound a slow, weightless pulse.
-  const droneGain = context.createGain();
-  droneGain.gain.value = 0.034;
-  droneGain.connect(master);
-  [55, 82.41].forEach((frequency, index) => {
-    const oscillator = context.createOscillator();
-    oscillator.type = index === 0 ? "sine" : "triangle";
-    oscillator.frequency.value = frequency;
-    oscillator.detune.value = index ? -7 : 4;
-    oscillator.connect(droneGain);
-    oscillator.start();
-  });
-
-  const pulse = context.createOscillator();
-  pulse.type = "sine";
-  pulse.frequency.value = 0.075;
-  const pulseDepth = context.createGain();
-  pulseDepth.gain.value = 0.012;
-  pulse.connect(pulseDepth).connect(droneGain.gain);
-  pulse.start();
-  noise.start();
-
-  return { context, master };
-}
+const spaceAudio = new Audio("tattooedpreacher-above-earth-8672.mp3");
+spaceAudio.loop = true;
+spaceAudio.preload = "auto";
+spaceAudio.volume = 0.35;
 
 document.querySelector("#sound-button").addEventListener("click", async (event) => {
   const button = event.currentTarget;
-  if (!soundscape) soundscape = createSoundscape();
-  if (!soundscape) {
-    button.textContent = "声场不可用";
-    return;
+  const shouldEnable = !button.classList.contains("active");
+
+  if (shouldEnable) {
+    try {
+      await spaceAudio.play();
+    } catch (error) {
+      button.textContent = "声场加载失败";
+      return;
+    }
+  } else {
+    spaceAudio.pause();
   }
 
-  const shouldEnable = !button.classList.contains("active");
-  await soundscape.context.resume();
-  const now = soundscape.context.currentTime;
-  soundscape.master.gain.cancelScheduledValues(now);
-  soundscape.master.gain.setValueAtTime(soundscape.master.gain.value, now);
-  soundscape.master.gain.linearRampToValueAtTime(shouldEnable ? 0.72 : 0, now + (shouldEnable ? 1.2 : 0.65));
   button.classList.toggle("active", shouldEnable);
   button.setAttribute("aria-pressed", String(shouldEnable));
   button.textContent = shouldEnable ? "声场 开" : "声场 关";
@@ -317,8 +268,4 @@ document.querySelectorAll("[data-close]").forEach((button) => {
 
 archiveOverlay.addEventListener("click", (event) => {
   if (event.target.closest("[data-close]")) closePanels();
-});
-
-window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closePanels();
 });
