@@ -371,6 +371,73 @@ body {
 .map-footer { position:relative; z-index:11; }
 @keyframes cosmosDrift { from { transform:scale(1.035) translate3d(-.5%, -.4%, 0); } to { transform:scale(1.07) translate3d(.6%, .4%, 0); } }
 
+/* 第二页微交互：星球仍然留在宇宙里，靠近时才亮出它的坐标。 */
+.cosmic-map .destination {
+  --label-shift: 7px;
+  transition: filter .42s ease, opacity .42s ease;
+}
+.cosmic-map .planet {
+  animation: planetBreath 6s ease-in-out infinite;
+  transform-origin: center;
+}
+.cosmic-map .destination-memory .planet { animation-delay: -1.6s; }
+.cosmic-map .destination-interest .planet { animation-delay: -3.2s; }
+.cosmic-map .destination-earth .planet { animation-delay: -4.7s; }
+.cosmic-map .planet-label {
+  opacity: .56;
+  filter: blur(.15px);
+  transition: opacity .32s ease, transform .42s cubic-bezier(.2,.85,.25,1), filter .32s ease;
+}
+.cosmic-map .planet-label b::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  margin: 0 8px 5px 0;
+  background: linear-gradient(90deg, transparent, currentColor);
+  vertical-align: middle;
+  opacity: .72;
+}
+.cosmic-map .destination:hover .planet-label,
+.cosmic-map .destination:focus-visible .planet-label,
+.cosmic-map .destination.is-approaching .planet-label {
+  opacity: 1;
+  filter: none;
+}
+.cosmic-map .destination:hover .planet-label,
+.cosmic-map .destination:focus-visible .planet-label,
+.cosmic-map .destination.is-approaching .planet-label {
+  transform: translateY(-50%) translateX(var(--label-shift));
+}
+.cosmic-map .destination-interest:hover .planet-label,
+.cosmic-map .destination-interest:focus-visible .planet-label,
+.cosmic-map .destination-interest.is-approaching .planet-label,
+.cosmic-map .destination-earth:hover .planet-label,
+.cosmic-map .destination-earth:focus-visible .planet-label,
+.cosmic-map .destination-earth.is-approaching .planet-label {
+  transform: translateY(-50%) translateX(calc(var(--label-shift) * -1));
+}
+.cosmic-map .destination-origin::after {
+  content: "";
+  position: absolute;
+  inset: -14%;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 212, 155, .12);
+  box-shadow: 0 0 0 14px rgba(255, 170, 125, .025), 0 0 38px rgba(255, 172, 130, .1);
+  opacity: .5;
+  animation: originBeacon 4.4s ease-in-out infinite;
+  pointer-events: none;
+}
+.cosmic-map .destination-origin:hover::after,
+.cosmic-map .destination-origin:focus-visible::after { opacity: 1; }
+.cosmic-map.is-approaching .destination:not(.is-approaching) { opacity: .14; filter: blur(2px); }
+.cosmic-map.is-approaching .cosmic-nebula { animation-play-state: paused; transform: scale(1.18); transition: transform .7s cubic-bezier(.2,.8,.2,1), filter .7s; filter: saturate(1.2) brightness(.8); }
+.cosmic-map .destination.is-approaching { z-index: 12; }
+.cosmic-map .destination.is-approaching .planet { transform: scale(1.48); }
+.cosmic-map .destination.is-approaching .planet-label { opacity: 0; }
+@keyframes planetBreath { 0%,100% { filter: brightness(.96); } 50% { filter: brightness(1.12); } }
+@keyframes originBeacon { 0%,100% { transform: scale(.96); opacity: .2; } 50% { transform: scale(1.08); opacity: .72; } }
+
 @media (max-width: 780px) {
   .star-map { padding:20px 18px 14px; height:100svh; grid-template-rows:auto minmax(620px, 1fr) auto; }
   .cosmic-map { min-height:620px; margin:0 -18px; }
@@ -380,6 +447,7 @@ body {
   .cosmic-map .destination-interest { --planet-x:78%!important; --planet-y:25%!important; }
   .cosmic-map .destination-earth { --planet-x:73%!important; --planet-y:72%!important; }
   .cosmic-map .planet-label { min-width:0; left:50%!important; right:auto!important; top:calc(100% + 8px)!important; transform:translateX(-50%); text-align:center!important; }
+  .cosmic-map .destination:hover .planet-label,.cosmic-map .destination:focus-visible .planet-label,.cosmic-map .destination.is-approaching .planet-label { transform:translateX(-50%); }
   .cosmic-map .planet-label small { display:none; }.cosmic-map .planet-label b { font-size:13px; }
 }
 

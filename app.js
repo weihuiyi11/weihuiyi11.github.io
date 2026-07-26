@@ -64,6 +64,8 @@ const starMap = document.querySelector("#star-map");
 const siteShell = document.querySelector("#site-shell");
 const archiveOverlay = document.querySelector("#archive-overlay");
 const signalOverlay = document.querySelector("#signal-overlay");
+const mapViewport = document.querySelector(".cosmic-map");
+let isApproachingDestination = false;
 
 function createStarfield() {
   const canvas = document.querySelector("#starfield");
@@ -197,13 +199,19 @@ document.querySelector("#sound-button").addEventListener("click", (event) => {
 
 document.querySelectorAll("[data-destination]").forEach((button) => {
   button.addEventListener("click", () => {
+    if (isApproachingDestination) return;
+    isApproachingDestination = true;
+    mapViewport.classList.add("is-approaching");
+    button.classList.add("is-approaching");
+
     if (button.dataset.destination === "origin") {
-      window.location.assign("./origin.html");
+      window.setTimeout(() => window.location.assign("./origin.html"), 720);
       return;
     }
     const item = destinations[button.dataset.destination];
-    const content = document.querySelector("#archive-content");
-    content.innerHTML = `
+    window.setTimeout(() => {
+      const content = document.querySelector("#archive-content");
+      content.innerHTML = `
         <div class="archive-number" id="archive-number"></div>
         <p class="archive-kicker">W.H.Y.号航行档案</p>
         <h3 id="archive-title"></h3>
@@ -217,6 +225,10 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
       document.querySelector("#archive-detail").textContent = item.detail;
     document.querySelector("#archive-card").style.setProperty("--accent", item.color);
     archiveOverlay.hidden = false;
+      mapViewport.classList.remove("is-approaching");
+      button.classList.remove("is-approaching");
+      isApproachingDestination = false;
+    }, 560);
   });
 });
 
