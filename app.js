@@ -108,7 +108,8 @@ function createStarfield() {
         speed: .00018 + random() * .00042,
         color: palette[Math.floor(random() * palette.length)],
         glow: bright ? 2.5 + random() * 4 : 0,
-        drift: (index % 3 - 1) * (.45 + depth)
+        // The launch sky remains subtle; the star map adds its own closer layers.
+        drift: (index % 3 - 1) * (2.4 + depth * 3.2)
       };
     });
   }
@@ -136,7 +137,7 @@ function createStarfield() {
 
     stars.forEach((star) => {
       const shimmer = reducedMotion ? 1 : .78 + Math.sin(time * star.speed + star.phase) * .22;
-      const x = star.x + (reducedMotion ? 0 : Math.sin(time * .000025 + star.phase) * star.drift);
+      const x = star.x + (reducedMotion ? 0 : Math.sin(time * .00012 + star.phase) * star.drift);
       const [red, green, blue] = star.color;
 
       if (star.glow) {
