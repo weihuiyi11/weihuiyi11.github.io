@@ -173,12 +173,37 @@ launchButton.addEventListener("click", () => {
   launchButton.querySelector("span").textContent = "航行者身份确认中";
   launchTransition.hidden = false;
   launchScreen.classList.add("is-launching");
+    spaceAudio.currentTime = 0;
+    spaceAudio.play()
+      .then(() => {
+        soundButton.classList.add("active");
+        soundButton.setAttribute("aria-pressed", "true");
+        soundButton.textContent = "声场 开";
+      })
+      .catch(() => {
+        soundButton.classList.remove("active");
+        soundButton.setAttribute("aria-pressed", "false");
+        soundButton.textContent = "声场 关";
+      });
+  // 在点击“开始航行”时先静音启动，避免浏览器拦截自动播放
+  spaceAudio.volume = 0;
+  const audioStarted = spaceAudio.play()
+    .then(() => true)
+    .catch(() => false);
 
-  window.setTimeout(() => {
+  window.setTimeout(async () => {
     launchScreen.hidden = true;
     launchTransition.hidden = true;
     starMap.hidden = false;
     siteShell.classList.add("is-launched");
+
+    if (await audioStarted) {
+      spaceAudio.volume = 0.35;
+      const soundButton = document.querySelector("#sound-button");
+      soundButton.classList.add("active");
+      soundButton.setAttribute("aria-pressed", "true");
+      soundButton.textContent = "声场 开";
+    }
   }, 1450);
 });
 
