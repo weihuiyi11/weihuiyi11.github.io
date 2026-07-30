@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#020309">
-  <meta name="description" content="宇宙航行：W.H.Y.号——魏辉怡的私人宇宙航行原型。">
+  <meta name="description" content="宇宙航行：W.H.Y.号，魏辉怡的私人宇宙航行主页，记录此刻的自己、朋友、兴趣与研究任务。">`n  <meta property="og:type" content="website">`n  <meta property="og:site_name" content="宇宙航行：W.H.Y.号">`n  <meta property="og:title" content="宇宙航行：W.H.Y.号">`n  <meta property="og:description" content="进入 W.H.Y.号私人星图，靠近一颗星球，读一段正在发生的生活。">`n  <meta property="og:image" content="https://weihuiyi11.github.io/hero-space.png">`n  <meta property="og:url" content="https://weihuiyi11.github.io/">`n  <meta name="twitter:card" content="summary_large_image">`n  <link rel="canonical" href="https://weihuiyi11.github.io/">`n  <link rel="icon" href="./hero-space.png" type="image/png">
   <title>宇宙航行：W.H.Y.号</title>
   <link rel="stylesheet" href="./styles.css?v=20260726-one-universe-1">
 </head>
@@ -12,7 +12,7 @@
   <main class="site-shell" id="site-shell">
     <canvas class="starfield" id="starfield" aria-hidden="true"></canvas>
     <div class="space-haze" aria-hidden="true"></div>
-    <div class="grain"></div>
+    <div class="grain" aria-hidden="true"></div>
 
     <section class="launch-screen" id="launch-screen">
       <div class="launch-art" role="img" aria-label="宏伟深空中的 W.H.Y.号与挥手邀请的宇航员"></div>
@@ -74,7 +74,7 @@
         <button class="destination destination-earth" type="button" data-destination="earth" style="--planet-color:#6ed6a5;--planet-x:76%;--planet-y:74%;--planet-size:112px" aria-label="前往地球观测站：全国流域观测任务">
           <span class="planet"><i></i></span><span class="planet-label"><b>地球观测站</b><small>全国流域观测任务</small></span>
         </button>
-        <button class="earth-signal" id="earth-signal" type="button"><span class="signal-ripple ripple-one"></span><span class="signal-ripple ripple-two"></span><span class="signal-core">✦</span><span class="signal-label"><b>来自地球的信号</b><small>1 条未读消息</small></span></button>
+        <button class="earth-signal" id="earth-signal" type="button" aria-label="读取来自地球的信号"><span class="signal-ripple ripple-one" aria-hidden="true"></span><span class="signal-ripple ripple-two" aria-hidden="true"></span><span class="signal-core" aria-hidden="true">✦</span><span class="signal-label"><b>来自地球的信号</b><small>1 条未读消息</small></span></button>
       </div>
 
       <footer class="map-footer">
@@ -85,12 +85,12 @@
     </section>
 
     <div class="archive-overlay" id="archive-overlay" hidden>
-      <article class="archive-card" id="archive-card">
+      <article class="archive-card" id="archive-card" role="dialog" aria-modal="true" aria-labelledby="archive-title" tabindex="-1">
         <button class="close-button" type="button" data-close aria-label="关闭档案">×</button>
         <div id="archive-content">
           <div class="archive-number">WHY-001</div>
           <p class="archive-kicker">ORIGIN PLANET · 航行员档案</p>
-          <h3>此刻的辉怡</h3>
+          <h3 id="archive-title">此刻的辉怡</h3>
           <p class="archive-summary">在地球上研究水与土地，也在自己的宇宙里寻找坐标。</p>
           <div class="archive-divider"></div>
           <p class="origin-intro">我现在最重要的身份，是中国科学院地理科学与资源研究所的一名研究生。眼下难得处在一段比较悠闲的航段，但我知道，大概一个月后，研究任务就会重新拉满。趁这段空隙，我想先把自己记录下来。</p>
@@ -125,11 +125,11 @@
     </div>
 
     <div class="archive-overlay signal-overlay" id="signal-overlay" hidden>
-      <article class="signal-card">
+      <article class="signal-card" role="dialog" aria-modal="true" aria-labelledby="signal-title" tabindex="-1">
         <button class="close-button" type="button" data-close aria-label="关闭信号">×</button>
-        <div class="signal-icon">✦</div>
+        <div class="signal-icon" aria-hidden="true">✦</div>
         <p class="archive-kicker">EARTH SIGNAL · 001</p>
-        <h3>接收到一段来自地球的信号</h3>
+        <h3 id="signal-title">接收到一段来自地球的信号</h3>
         <dl>
           <div><dt>信号来源</dt><dd>一位还没署名的朋友</dd></div>
           <div><dt>接收时间</dt><dd>2026年7月</dd></div>
@@ -141,6 +141,6 @@
     </div>
   </main>
 
-  <script src="./app.js?v=20260726-soundscape-1"></script>
+  <script src="./app.js?v=20260730-accessibility-1" defer></script>
 </body>
 </html>
