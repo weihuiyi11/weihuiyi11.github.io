@@ -6,7 +6,8 @@
   const shards = [...document.querySelectorAll('.signal-shard')];
   const panels = [...document.querySelectorAll('.record-text')];
   const index = document.querySelector('#record-index');
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;`n  let quietMode = false;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let quietMode = false;
 
   back.addEventListener('click', () => {
     if (window.parent !== window) window.parent.postMessage({ type: 'why:close-origin' }, window.location.origin);
