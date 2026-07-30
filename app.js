@@ -38,7 +38,8 @@ const archiveOverlay = document.querySelector("#archive-overlay");
 const signalOverlay = document.querySelector("#signal-overlay");
 const mapViewport = document.querySelector(".cosmic-map");
 let isApproachingDestination = false;
-let originFrame = null;`nlet activeDialogTrigger = null;
+let originFrame = null;
+let activeDialogTrigger = null;
 
 function openOriginPlanet(button) {
   // Keep the star map document alive beneath the planet. This lets the BGM
@@ -78,7 +79,14 @@ window.addEventListener("message", (event) => {
   }
 });
 
-window.addEventListener("keydown", (event) => {`n  if (event.key !== "Escape") return;`n  if (originFrame) {`n    closeOriginPlanet();`n    return;`n  }`n  closePanels();`n});
+window.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  if (originFrame) {
+    closeOriginPlanet();
+    return;
+  }
+  closePanels();
+});
 
 function createStarfield() {
   const canvas = document.querySelector("#starfield");
@@ -176,7 +184,22 @@ function createStarfield() {
 
 createStarfield();
 
-function openPanel(overlay, trigger) {`n  activeDialogTrigger = trigger || document.activeElement;`n  overlay.hidden = false;`n  const dialog = overlay.querySelector("[role=dialog]");`n  window.setTimeout(() => dialog?.focus(), 0);`n}`n`nfunction closePanels() {`n  const shouldRestoreFocus = !archiveOverlay.hidden || !signalOverlay.hidden;`n  archiveOverlay.hidden = true;`n  signalOverlay.hidden = true;`n  if (shouldRestoreFocus && activeDialogTrigger instanceof HTMLElement) {`n    activeDialogTrigger.focus();`n  }`n  activeDialogTrigger = null;`n}
+function openPanel(overlay, trigger) {
+  activeDialogTrigger = trigger || document.activeElement;
+  overlay.hidden = false;
+  const dialog = overlay.querySelector("[role=dialog]");
+  window.setTimeout(() => dialog?.focus(), 0);
+}
+
+function closePanels() {
+  const shouldRestoreFocus = !archiveOverlay.hidden || !signalOverlay.hidden;
+  archiveOverlay.hidden = true;
+  signalOverlay.hidden = true;
+  if (shouldRestoreFocus && activeDialogTrigger instanceof HTMLElement) {
+    activeDialogTrigger.focus();
+  }
+  activeDialogTrigger = null;
+}
 
 const spaceAudio = new Audio("tattooedpreacher-above-earth-8672.mp3");
 spaceAudio.loop = true;
