@@ -6,7 +6,6 @@
   const shards = [...document.querySelectorAll('.signal-shard')];
   const panels = [...document.querySelectorAll('.record-text')];
   const index = document.querySelector('#record-index');
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let quietMode = false;
 
   back.addEventListener('click', () => {
@@ -37,12 +36,7 @@
     quiet.setAttribute('aria-pressed', String(value)); quiet.textContent = value ? '恢复动态' : '减弱动态';
     try { localStorage.setItem('why-origin-quiet', String(value)); } catch (_) {}
   }
-  try {
-    const savedQuiet = localStorage.getItem('why-origin-quiet');
-    setQuiet(savedQuiet === null ? prefersReducedMotion : savedQuiet === 'true');
-  } catch (_) {
-    setQuiet(prefersReducedMotion);
-  }
+  try { setQuiet(localStorage.getItem('why-origin-quiet') === 'true'); } catch (_) {}
   quiet.addEventListener('click', () => setQuiet(!quietMode));
 
   const canvas = document.querySelector('#origin-dust'); const ctx = canvas.getContext('2d');
