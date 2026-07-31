@@ -79,14 +79,28 @@ function openOriginPlanet(button) {
   originFrame = document.createElement("iframe");
   originFrame.title = "原点星球";
   originFrame.setAttribute("allow", "autoplay");
-  originFrame.src = new URL("./origin.html?v=20260731-origin-frame-2", window.location.href).href;
   originFrame.style.cssText = [
     "position:fixed", "z-index:100", "inset:0", "width:100vw", "height:100vh",
     "border:0", "background:#02040c", "opacity:0", "transition:opacity .42s ease",
     "box-shadow:0 0 80px rgba(0,0,0,.6)"
   ].join(";");
+  originFrame.srcdoc = `<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><style>html,body{height:100%;margin:0;background:#02040c;color:#f7f4ee;font:14px sans-serif}body{display:grid;place-items:center;letter-spacing:.18em}</style></head><body>原点星球载入中</body></html>`;
   document.body.append(originFrame);
   requestAnimationFrame(() => { if (originFrame) originFrame.style.opacity = "1"; });
+  fetch("./origin.html?v=20260731-origin-srcdoc-1", { cache: "no-store" })
+    .then((response) => {
+      if (!response.ok) throw new Error("Origin page failed to load");
+      return response.text();
+    })
+    .then((html) => {
+      if (!originFrame) return;
+      originFrame.srcdoc = html.replace("<head>", `<head><base href="${window.location.origin}/">`);
+    })
+    .catch(() => {
+      if (originFrame) {
+        originFrame.src = new URL("./origin.html?v=20260731-origin-frame-3", window.location.href).href;
+      }
+    });
 }
 
 function closeOriginPlanet() {
