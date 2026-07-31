@@ -79,21 +79,14 @@ function openOriginPlanet(button) {
   originFrame = document.createElement("iframe");
   originFrame.title = "原点星球";
   originFrame.setAttribute("allow", "autoplay");
+  originFrame.src = new URL("./origin.html?v=20260731-origin-frame-2", window.location.href).href;
   originFrame.style.cssText = [
     "position:fixed", "z-index:100", "inset:0", "width:100vw", "height:100vh",
     "border:0", "background:#02040c", "opacity:0", "transition:opacity .42s ease",
     "box-shadow:0 0 80px rgba(0,0,0,.6)"
   ].join(";");
   document.body.append(originFrame);
-  let originLoaded = false;
-  originFrame.addEventListener("load", () => { originLoaded = true; }, { once: true });
-  originFrame.src = new URL("./origin.html?v=20260731-origin-frame-1", window.location.href).href;
   requestAnimationFrame(() => { if (originFrame) originFrame.style.opacity = "1"; });
-  window.setTimeout(() => {
-    if (!originLoaded && originFrame) {
-      window.location.href = "./origin.html?v=20260731-origin-frame-1";
-    }
-  }, 1800);
 }
 
 function closeOriginPlanet() {
@@ -244,6 +237,9 @@ spaceAudio.volume = 0;
 const soundButton = document.querySelector("#sound-button");
 const targetVolume = 0.35;
 let fadeTimer = null;
+let ambientContext = null;
+let ambientGain = null;
+let ambientNodes = [];
 
 function setSoundButton(isEnabled) {
   soundButton.classList.toggle("active", isEnabled);
@@ -256,6 +252,49 @@ function cancelFade() {
     window.clearInterval(fadeTimer);
     fadeTimer = null;
   }
+}
+
+function ensureAmbientSoundscape() {
+  if (ambientContext) return ambientContext;
+  const AudioContextConstructor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextConstructor) return null;
+
+  ambientContext = new AudioContextConstructor();
+  ambientGain = ambientContext.createGain();
+  ambientGain.gain.value = 0;
+  ambientGain.connect(ambientContext.destination);
+
+  [55, 82.5, 110].forEach((frequency, index) => {
+    const oscillator = ambientContext.createOscillator();
+    const voiceGain = ambientContext.createGain();
+    oscillator.type = index === 1 ? "triangle" : "sine";
+    oscillator.frequency.value = frequency;
+    voiceGain.gain.value = index === 0 ? 0.18 : 0.08;
+    oscillator.connect(voiceGain).connect(ambientGain);
+    oscillator.start();
+    ambientNodes.push(oscillator, voiceGain);
+  });
+
+  return ambientContext;
+}
+
+async function startAmbientSoundscape(volume = 0.045) {
+  const context = ensureAmbientSoundscape();
+  if (!context || !ambientGain) return false;
+  if (context.state === "suspended") await context.resume();
+  const now = context.currentTime;
+  ambientGain.gain.cancelScheduledValues(now);
+  ambientGain.gain.setValueAtTime(ambientGain.gain.value, now);
+  ambientGain.gain.linearRampToValueAtTime(volume, now + 1.2);
+  return true;
+}
+
+function stopAmbientSoundscape() {
+  if (!ambientContext || !ambientGain) return;
+  const now = ambientContext.currentTime;
+  ambientGain.gain.cancelScheduledValues(now);
+  ambientGain.gain.setValueAtTime(ambientGain.gain.value, now);
+  ambientGain.gain.linearRampToValueAtTime(0, now + 0.35);
 }
 
 function fadeAudioTo(volume, duration) {
@@ -285,6 +324,13 @@ launchButton.addEventListener("click", async () => {
   spaceAudio.volume = 0;
   let audioStarted = false;
   let enteredMap = false;
+  let ambientStarted = false;
+
+  try {
+    ambientStarted = await startAmbientSoundscape();
+  } catch (error) {
+    ambientStarted = false;
+  }
 
   const audioAttempt = spaceAudio.play();
   audioAttempt.then(() => {
@@ -308,6 +354,8 @@ launchButton.addEventListener("click", async () => {
       setSoundButton(true);
       // The music becomes audible only after entering the star map, then rises gently.
       fadeAudioTo(targetVolume, 7000);
+    } else if (ambientStarted) {
+      setSoundButton(true);
     }
   }, 1450);
 });
@@ -315,6 +363,7 @@ launchButton.addEventListener("click", async () => {
 document.querySelector("#return-outside").addEventListener("click", () => {
   closeOriginPlanet();
   cancelFade();
+  stopAmbientSoundscape();
   spaceAudio.pause();
   spaceAudio.currentTime = 0;
   spaceAudio.volume = 0;
@@ -337,14 +386,21 @@ soundButton.addEventListener("click", async () => {
       spaceAudio.volume = 0;
       await spaceAudio.play();
       setSoundButton(true);
+      startAmbientSoundscape();
       fadeAudioTo(targetVolume, 1500);
     } catch (error) {
-      setSoundButton(false);
-      soundButton.textContent = "声场加载失败";
+      try {
+        await startAmbientSoundscape(0.045);
+        setSoundButton(true);
+      } catch (_) {
+        setSoundButton(false);
+        soundButton.textContent = "声场加载失败";
+      }
     }
   } else {
     spaceAudio.pause();
     spaceAudio.volume = 0;
+    stopAmbientSoundscape();
     setSoundButton(false);
   }
 });
