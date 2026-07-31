@@ -29,6 +29,34 @@ const destinations = {
   }
 };
 
+function originArchive() {
+  return `
+    <section class="origin-cockpit" aria-label="W.H.Y.号原点观测舱">
+      <div class="cockpit-stars" aria-hidden="true"></div>
+      <div class="cockpit-hull hull-left" aria-hidden="true"></div><div class="cockpit-hull hull-right" aria-hidden="true"></div>
+      <header class="cockpit-header"><span>W.H.Y.号 / ORIGIN OBSERVATORY</span><span>距离原点星球 · 2,184 km</span></header>
+      <button class="cockpit-close" type="button" data-close aria-label="离开观测舱">×</button>
+      <div class="cockpit-window" aria-hidden="true"><div class="window-glow"></div><div class="origin-world"></div><div class="orbit-line orbit-line-one"></div><div class="orbit-line orbit-line-two"></div><span class="window-coordinate">ORIGIN · 00°00′</span></div>
+      <aside class="cockpit-left">
+        <span class="panel-tag">PILOT PROFILE</span><h3>此刻的辉怡</h3>
+        <p>在地球上研究水与土地，<br>也在自己的宇宙里寻找坐标。</p>
+        <div class="pilot-stat"><span>当前身份</span><b>地理学研究生</b></div>
+        <div class="pilot-stat"><span>航行阶段</span><b>短暂的悠闲与蓄能</b></div>
+      </aside>
+      <nav class="cockpit-tabs" aria-label="航行员记录">
+        <button class="origin-tab active" type="button" data-log="now"><i>01</i><span>此刻状态</span></button>
+        <button class="origin-tab" type="button" data-log="rule"><i>02</i><span>航行准则</span></button>
+        <button class="origin-tab" type="button" data-log="signal"><i>03</i><span>私人信号</span></button>
+      </nav>
+      <section class="cockpit-projection" aria-live="polite">
+        <article class="origin-log active" data-log-panel="now"><span>01 / CURRENT FLIGHT</span><h4>在忙碌靠近前，<br>先把自己记录下来。</h4><p>眼下的航程难得安静。但一个月后，研究任务会再次拉满；所以这间观测舱，是给此刻的她留下的一枚坐标。</p></article>
+        <article class="origin-log" data-log-panel="rule"><span>02 / FLIGHT RULE</span><h4>不必活得<br>太小心。</h4><p>小时候相信“走自己的路”。现在知道印象会影响关系与资源，于是认真照看自己在世界里的样子；但不让无关的目光替自己决定方向。</p></article>
+        <article class="origin-log" data-log-panel="signal"><span>03 / PRIVATE SIGNAL</span><h4>喜欢未知，<br>也很需要情感。</h4><p>她愿意走向难一点的事，也会被真挚的关系和情绪浓烈的故事打动。表面有些炸炸呼呼，内里却始终认真回应靠近。</p></article>
+      </section>
+      <footer class="cockpit-console"><div><i class="status-dot"></i> 舱压稳定</div><div class="console-sweep"><i></i></div><div>观测模式 · 私人</div><button type="button" data-close>返回私人星图 ↗</button></footer>
+    </section>`;
+}
+
 const launchScreen = document.querySelector("#launch-screen");
 const launchButton = document.querySelector("#launch-button");
 const launchTransition = document.querySelector("#launch-transition");
@@ -39,7 +67,6 @@ const signalOverlay = document.querySelector("#signal-overlay");
 const mapViewport = document.querySelector(".cosmic-map");
 let isApproachingDestination = false;
 let originFrame = null;
-let activeDialogTrigger = null;
 
 function openOriginPlanet(button) {
   // Keep the star map document alive beneath the planet. This lets the BGM
@@ -80,12 +107,7 @@ window.addEventListener("message", (event) => {
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.key !== "Escape") return;
-  if (originFrame) {
-    closeOriginPlanet();
-    return;
-  }
-  closePanels();
+  if (event.key === "Escape" && originFrame) closeOriginPlanet();
 });
 
 function createStarfield() {
@@ -184,21 +206,9 @@ function createStarfield() {
 
 createStarfield();
 
-function openPanel(overlay, trigger) {
-  activeDialogTrigger = trigger || document.activeElement;
-  overlay.hidden = false;
-  const dialog = overlay.querySelector("[role=dialog]");
-  window.setTimeout(() => dialog?.focus(), 0);
-}
-
 function closePanels() {
-  const shouldRestoreFocus = !archiveOverlay.hidden || !signalOverlay.hidden;
   archiveOverlay.hidden = true;
   signalOverlay.hidden = true;
-  if (shouldRestoreFocus && activeDialogTrigger instanceof HTMLElement) {
-    activeDialogTrigger.focus();
-  }
-  activeDialogTrigger = null;
 }
 
 const spaceAudio = new Audio("tattooedpreacher-above-earth-8672.mp3");
@@ -335,7 +345,7 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
       document.querySelector("#archive-summary").textContent = item.summary;
       document.querySelector("#archive-detail").textContent = item.detail;
     document.querySelector("#archive-card").style.setProperty("--accent", item.color);
-    openPanel(archiveOverlay, button);
+    archiveOverlay.hidden = false;
       mapViewport.classList.remove("is-approaching");
       button.classList.remove("is-approaching");
       isApproachingDestination = false;
@@ -344,7 +354,7 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
 });
 
 document.querySelector("#earth-signal").addEventListener("click", () => {
-  openPanel(signalOverlay, document.querySelector("#earth-signal"));
+  signalOverlay.hidden = false;
 });
 
 document.querySelectorAll("[data-close]").forEach((button) => {
