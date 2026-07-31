@@ -69,25 +69,15 @@ let isApproachingDestination = false;
 let originFrame = null;
 
 function openOriginPlanet(button) {
-  // Keep the star map document alive beneath the planet. This lets the BGM
-  // continue without restarting and keeps every other planet in its position.
   mapViewport.classList.remove("is-approaching");
   button.classList.remove("is-approaching");
   isApproachingDestination = false;
 
-  originFrame = document.createElement("iframe");
-  originFrame.src = "./origin.html";
-  originFrame.title = "原点星球";
-  originFrame.setAttribute("allow", "autoplay");
-  originFrame.style.cssText = [
-    "position:fixed", "z-index:100", "inset:0", "width:100vw", "height:100vh",
-    "border:0", "background:#02040c", "opacity:0", "transition:opacity .42s ease",
-    "box-shadow:0 0 80px rgba(0,0,0,.6)"
-  ].join(";");
-  document.body.append(originFrame);
-  requestAnimationFrame(() => { if (originFrame) originFrame.style.opacity = "1"; });
+  const content = document.querySelector("#archive-content");
+  content.innerHTML = originArchive();
+  document.querySelector("#archive-card").style.setProperty("--accent", "#f6c987");
+  archiveOverlay.hidden = false;
 }
-
 function closeOriginPlanet() {
   if (!originFrame) return;
   const frame = originFrame;
