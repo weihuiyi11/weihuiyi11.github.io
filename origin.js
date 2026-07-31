@@ -10,7 +10,7 @@
   let quietMode = false;
 
   back.addEventListener('click', () => {
-    if (window.parent !== window) window.parent.postMessage({ type: 'why:close-origin' }, window.location.origin);
+    if (window.parent !== window) window.parent.postMessage({ type: 'why:close-origin' }, '*');
     else if (history.length > 1) history.back(); else location.href = './index.html';
   });
 
