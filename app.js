@@ -67,6 +67,7 @@ const signalOverlay = document.querySelector("#signal-overlay");
 const mapViewport = document.querySelector(".cosmic-map");
 let isApproachingDestination = false;
 let originFrame = null;
+let activeDialogTrigger = null;
 
 function openOriginPlanet(button) {
   // Keep the star map document alive beneath the planet. This lets the BGM
@@ -107,7 +108,12 @@ window.addEventListener("message", (event) => {
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && originFrame) closeOriginPlanet();
+  if (event.key !== "Escape") return;
+  if (originFrame) {
+    closeOriginPlanet();
+    return;
+  }
+  closePanels();
 });
 
 function createStarfield() {
@@ -206,9 +212,21 @@ function createStarfield() {
 
 createStarfield();
 
+function openPanel(overlay, trigger) {
+  activeDialogTrigger = trigger || document.activeElement;
+  overlay.hidden = false;
+  const dialog = overlay.querySelector("[role=dialog]");
+  window.setTimeout(() => dialog?.focus(), 0);
+}
+
 function closePanels() {
+  const shouldRestoreFocus = !archiveOverlay.hidden || !signalOverlay.hidden;
   archiveOverlay.hidden = true;
   signalOverlay.hidden = true;
+  if (shouldRestoreFocus && activeDialogTrigger instanceof HTMLElement) {
+    activeDialogTrigger.focus();
+  }
+  activeDialogTrigger = null;
 }
 
 const spaceAudio = new Audio("tattooedpreacher-above-earth-8672.mp3");
@@ -345,7 +363,7 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
       document.querySelector("#archive-summary").textContent = item.summary;
       document.querySelector("#archive-detail").textContent = item.detail;
     document.querySelector("#archive-card").style.setProperty("--accent", item.color);
-    archiveOverlay.hidden = false;
+    openPanel(archiveOverlay, button);
       mapViewport.classList.remove("is-approaching");
       button.classList.remove("is-approaching");
       isApproachingDestination = false;
@@ -354,7 +372,7 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
 });
 
 document.querySelector("#earth-signal").addEventListener("click", () => {
-  signalOverlay.hidden = false;
+  openPanel(signalOverlay, document.querySelector("#earth-signal"));
 });
 
 document.querySelectorAll("[data-close]").forEach((button) => {
