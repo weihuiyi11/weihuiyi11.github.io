@@ -77,7 +77,6 @@ function openOriginPlanet(button) {
   isApproachingDestination = false;
 
   originFrame = document.createElement("iframe");
-  originFrame.src = "./origin.html";
   originFrame.title = "原点星球";
   originFrame.setAttribute("allow", "autoplay");
   originFrame.style.cssText = [
@@ -86,7 +85,15 @@ function openOriginPlanet(button) {
     "box-shadow:0 0 80px rgba(0,0,0,.6)"
   ].join(";");
   document.body.append(originFrame);
+  let originLoaded = false;
+  originFrame.addEventListener("load", () => { originLoaded = true; }, { once: true });
+  originFrame.src = new URL("./origin.html?v=20260731-origin-frame-1", window.location.href).href;
   requestAnimationFrame(() => { if (originFrame) originFrame.style.opacity = "1"; });
+  window.setTimeout(() => {
+    if (!originLoaded && originFrame) {
+      window.location.href = "./origin.html?v=20260731-origin-frame-1";
+    }
+  }, 1800);
 }
 
 function closeOriginPlanet() {
