@@ -633,3 +633,70 @@ body {
   }
   .cosmic-map { min-height: 0; }
 }
+
+/* Performance-minded exploration motion: tiny composited layers, slow enough to feel planetary. */
+.cosmic-map .planet {
+  overflow: hidden;
+  contain: paint;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+  animation: planetSurfaceGlow 18s ease-in-out infinite;
+}
+.cosmic-map .planet::after {
+  content: "";
+  position: absolute;
+  inset: -24%;
+  z-index: 2;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: .28;
+  background:
+    radial-gradient(ellipse at 32% 36%, rgba(255,255,255,.28) 0 8%, transparent 19%),
+    radial-gradient(ellipse at 68% 54%, rgba(255,255,255,.18) 0 7%, transparent 18%),
+    linear-gradient(100deg, transparent 13%, rgba(255,255,255,.17) 23%, transparent 35%, rgba(255,255,255,.12) 49%, transparent 64%);
+  mix-blend-mode: screen;
+  transform: translate3d(-7%, 0, 0) rotate(0deg);
+  animation: planetCloudDrift 38s linear infinite;
+}
+.cosmic-map .destination-memory .planet::after { animation-duration: 46s; opacity: .24; }
+.cosmic-map .destination-interest .planet::after { animation-duration: 34s; opacity: .22; }
+.cosmic-map .destination-earth .planet::after { animation-duration: 42s; opacity: .32; }
+.cosmic-map .planet i {
+  z-index: 3;
+  will-change: transform;
+  animation: planetRingPrecession 52s linear infinite;
+}
+.cosmic-map .destination-memory .planet i { animation-duration: 62s; }
+.cosmic-map .destination-interest .planet i { animation-duration: 48s; }
+.cosmic-map .destination-earth .planet i { animation-duration: 58s; }
+.cosmic-map .destination:hover .planet::after,
+.cosmic-map .destination:focus-visible .planet::after {
+  opacity: .42;
+}
+.cosmic-map::after,
+.cosmic-star-motion {
+  will-change: transform, opacity;
+}
+@keyframes planetSurfaceGlow {
+  0%, 100% { opacity: .96; }
+  50% { opacity: 1; }
+}
+@keyframes planetCloudDrift {
+  from { transform: translate3d(-8%, -1%, 0) rotate(0deg); }
+  to { transform: translate3d(8%, 1%, 0) rotate(360deg); }
+}
+@keyframes planetRingPrecession {
+  from { transform: rotate(-18deg); }
+  to { transform: rotate(342deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cosmic-map .planet,
+  .cosmic-map .planet::after,
+  .cosmic-map .planet i,
+  .cosmic-map::after,
+  .cosmic-star-motion {
+    animation: none !important;
+  }
+}
