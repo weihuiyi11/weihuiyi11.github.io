@@ -277,19 +277,25 @@ launchButton.addEventListener("click", async () => {
   spaceAudio.currentTime = 0;
   spaceAudio.volume = 0;
   let audioStarted = false;
+  let enteredMap = false;
 
-  try {
-    await spaceAudio.play();
+  const audioAttempt = spaceAudio.play();
+  audioAttempt.then(() => {
     audioStarted = true;
-  } catch (error) {
+    if (enteredMap) {
+      setSoundButton(true);
+      fadeAudioTo(targetVolume, 7000);
+    }
+  }).catch(() => {
     setSoundButton(false);
-  }
+  });
 
   window.setTimeout(() => {
     launchScreen.hidden = true;
     launchTransition.hidden = true;
     starMap.hidden = false;
     siteShell.classList.add("is-launched");
+    enteredMap = true;
 
     if (audioStarted) {
       setSoundButton(true);
