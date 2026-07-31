@@ -67,7 +67,6 @@ const signalOverlay = document.querySelector("#signal-overlay");
 const mapViewport = document.querySelector(".cosmic-map");
 let isApproachingDestination = false;
 let originFrame = null;
-let activeDialogTrigger = null;
 
 function openOriginPlanet(button) {
   // Keep the star map document alive beneath the planet. This lets the BGM
@@ -77,6 +76,7 @@ function openOriginPlanet(button) {
   isApproachingDestination = false;
 
   originFrame = document.createElement("iframe");
+  originFrame.src = "./origin.html";
   originFrame.title = "原点星球";
   originFrame.setAttribute("allow", "autoplay");
   originFrame.style.cssText = [
@@ -84,30 +84,153 @@ function openOriginPlanet(button) {
     "border:0", "background:#02040c", "opacity:0", "transition:opacity .42s ease",
     "box-shadow:0 0 80px rgba(0,0,0,.6)"
   ].join(";");
-  const originDocument = "\u003c!doctype html\u003e\n\u003chtml lang=\"zh-CN\"\u003e\n\u003chead\u003e\n  \u003cmeta charset=\"UTF-8\"\u003e\n  \u003cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\u003e\n  \u003cmeta name=\"theme-color\" content=\"#09030f\"\u003e\n  \u003cmeta name=\"description\" content=\"原点星球，W.H.Y.号私人星图中的航行员观测记录。\"\u003e\n  \u003clink rel=\"canonical\" href=\"https://weihuiyi11.github.io/origin.html\"\u003e\n  \u003ctitle\u003e原点星球 · W.H.Y.号\u003c/title\u003e\n  \u003clink rel=\"stylesheet\" href=\"./origin.css?v=20260731-orbital-motion-1\"\u003e\n\u003c/head\u003e\n\u003cbody\u003e\n  \u003cmain class=\"origin-world\" id=\"origin-world\"\u003e\n    \u003ccanvas id=\"origin-dust\" aria-hidden=\"true\"\u003e\u003c/canvas\u003e\n    \u003cdiv class=\"nebula nebula-one\" aria-hidden=\"true\"\u003e\u003c/div\u003e\n    \u003cdiv class=\"nebula nebula-two\" aria-hidden=\"true\"\u003e\u003c/div\u003e\n\n    \u003cheader class=\"world-header\"\u003e\n      \u003cbutton class=\"back-link\" id=\"back-to-map\" type=\"button\"\u003e← 返回宇宙星图\u003c/button\u003e\n      \u003cp\u003eW.H.Y.号 / 原点星球观测记录\u003c/p\u003e\n      \u003cspan\u003e坐标 00° 00′\u003c/span\u003e\n    \u003c/header\u003e\n\n    \u003csection class=\"planet-stage\" id=\"planet-stage\" aria-label=\"可探索的原点星球\"\u003e\n      \u003cdiv class=\"planet-aura\" aria-hidden=\"true\"\u003e\u003c/div\u003e\n      \u003cdiv class=\"planet-shadow\" aria-hidden=\"true\"\u003e\u003c/div\u003e\n      \u003cdiv class=\"origin-planet\" id=\"origin-planet\" aria-hidden=\"true\"\u003e\n        \u003cdiv class=\"planet-core\"\u003e\u003c/div\u003e\n        \u003cdiv class=\"planet-crust crust-one\"\u003e\u003c/div\u003e\u003cdiv class=\"planet-crust crust-two\"\u003e\u003c/div\u003e\n        \u003cdiv class=\"lava-stream stream-one\"\u003e\u003c/div\u003e\u003cdiv class=\"lava-stream stream-two\"\u003e\u003c/div\u003e\u003cdiv class=\"lava-stream stream-three\"\u003e\u003c/div\u003e\n        \u003cdiv class=\"crystal-field\"\u003e\u003ci\u003e\u003c/i\u003e\u003ci\u003e\u003c/i\u003e\u003ci\u003e\u003c/i\u003e\u003ci\u003e\u003c/i\u003e\u003ci\u003e\u003c/i\u003e\u003ci\u003e\u003c/i\u003e\u003c/div\u003e\n        \u003cdiv class=\"planet-shine\"\u003e\u003c/div\u003e\u003cdiv class=\"planet-night\"\u003e\u003c/div\u003e\n      \u003c/div\u003e\n      \u003cdiv class=\"orbital-path path-one\" aria-hidden=\"true\"\u003e\u003c/div\u003e\u003cdiv class=\"orbital-path path-two\" aria-hidden=\"true\"\u003e\u003c/div\u003e\n\n      \u003cbutton class=\"signal-shard shard-now active\" data-record=\"now\" type=\"button\" aria-label=\"探索此刻状态\"\u003e\u003ci\u003e\u003c/i\u003e\u003cspan\u003e\u003cb\u003e01\u003c/b\u003e 此刻状态\u003c/span\u003e\u003c/button\u003e\n      \u003cbutton class=\"signal-shard shard-belief\" data-record=\"belief\" type=\"button\" aria-label=\"探索航行准则\"\u003e\u003ci\u003e\u003c/i\u003e\u003cspan\u003e\u003cb\u003e02\u003c/b\u003e 航行准则\u003c/span\u003e\u003c/button\u003e\n      \u003cbutton class=\"signal-shard shard-signal\" data-record=\"signal\" type=\"button\" aria-label=\"探索私人信号\"\u003e\u003ci\u003e\u003c/i\u003e\u003cspan\u003e\u003cb\u003e03\u003c/b\u003e 私人信号\u003c/span\u003e\u003c/button\u003e\n    \u003c/section\u003e\n\n    \u003csection class=\"planet-record\" aria-live=\"polite\"\u003e\n      \u003cp class=\"record-kicker\"\u003eORIGIN CORE / \u003cspan id=\"record-index\"\u003e01\u003c/span\u003e\u003c/p\u003e\n      \u003carticle class=\"record-text active\" data-panel=\"now\"\u003e\u003ch1\u003e此刻的\u003cbr\u003e\u003cem\u003e辉怡\u003c/em\u003e\u003c/h1\u003e\u003cp\u003e在地球上研究水与土地，\u003cbr\u003e也在自己的宇宙里寻找坐标。\u003c/p\u003e\u003c/article\u003e\n      \u003carticle class=\"record-text\" data-panel=\"belief\"\u003e\u003ch1\u003e方向，\u003cbr\u003e\u003cem\u003e由自己决定\u003c/em\u003e\u003c/h1\u003e\u003cp\u003e认真照看与世界相遇时的自己，\u003cbr\u003e但不让无关的目光替我决定方向。\u003c/p\u003e\u003c/article\u003e\n      \u003carticle class=\"record-text\" data-panel=\"signal\"\u003e\u003ch1\u003e仍会为\u003cbr\u003e\u003cem\u003e真挚靠近\u003c/em\u003e发亮\u003c/h1\u003e\u003cp\u003e喜欢未知，也珍惜那些\u003cbr\u003e让人愿意认真回应的情感。\u003c/p\u003e\u003c/article\u003e\n    \u003c/section\u003e\n\n    \u003cdiv class=\"interaction-hint\" id=\"interaction-hint\"\u003e\u003ci\u003e\u003c/i\u003e 移动光标，感受星球的回应\u003c/div\u003e\n    \u003cfooter class=\"world-footer\"\u003e\u003cspan\u003e\u003ci\u003e\u003c/i\u003e 原点星球已苏醒\u003c/span\u003e\u003cspan\u003e点击漂浮晶体，读取一段信号\u003c/span\u003e\u003cbutton id=\"quiet-mode\" type=\"button\" aria-pressed=\"false\"\u003e减弱动态\u003c/button\u003e\u003c/footer\u003e\n  \u003c/main\u003e\n  \u003cscript src=\"./origin.js?v=20260731-inline-return-1\" defer\u003e\u003c/script\u003e\n\u003c/body\u003e\n\u003c/html\u003e\n";
-  originFrame.srcdoc = originDocument.replace("<head>", `<head><base href="${window.location.origin}/">`);
   document.body.append(originFrame);
   requestAnimationFrame(() => { if (originFrame) originFrame.style.opacity = "1"; });
-  return ambientContext;
 }
 
-async function startAmbientSoundscape(volume = 0.045) {
-  const context = ensureAmbientSoundscape();
-  if (!context || !ambientGain) return false;
-  if (context.state === "suspended") await context.resume();
-  const now = context.currentTime;
-  ambientGain.gain.cancelScheduledValues(now);
-  ambientGain.gain.setValueAtTime(ambientGain.gain.value, now);
-  ambientGain.gain.linearRampToValueAtTime(volume, now + 1.2);
-  return true;
+function closeOriginPlanet() {
+  if (!originFrame) return;
+  const frame = originFrame;
+  originFrame = null;
+  frame.style.opacity = "0";
+  window.setTimeout(() => frame.remove(), 430);
+  // Defensive reset: the map must never remain in its approach-only state.
+  mapViewport.classList.remove("is-approaching");
+  document.querySelectorAll("[data-destination]").forEach((item) => item.classList.remove("is-approaching"));
+  isApproachingDestination = false;
 }
 
-function stopAmbientSoundscape() {
-  if (!ambientContext || !ambientGain) return;
-  const now = ambientContext.currentTime;
-  ambientGain.gain.cancelScheduledValues(now);
-  ambientGain.gain.setValueAtTime(ambientGain.gain.value, now);
-  ambientGain.gain.linearRampToValueAtTime(0, now + 0.35);
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "why:close-origin" && event.source === originFrame?.contentWindow) {
+    closeOriginPlanet();
+  }
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && originFrame) closeOriginPlanet();
+});
+
+function createStarfield() {
+  const canvas = document.querySelector("#starfield");
+  const context = canvas.getContext("2d");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const palette = [
+    [222, 236, 255],
+    [169, 218, 244],
+    [255, 225, 190],
+    [198, 202, 255]
+  ];
+  let stars = [];
+  let width = 0;
+  let height = 0;
+  let animationFrame = 0;
+
+  // Stable pseudo-random values keep the sky natural without jumping after resize.
+  function randomFactory(seed) {
+    return function random() {
+      seed |= 0;
+      seed = seed + 0x6D2B79F5 | 0;
+      let value = Math.imul(seed ^ seed >>> 15, 1 | seed);
+      value = value + Math.imul(value ^ value >>> 7, 61 | value) ^ value;
+      return ((value ^ value >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  function buildStars() {
+    const random = randomFactory(7192001);
+    const density = Math.min(310, Math.max(150, Math.round(width * height / 6500)));
+    stars = Array.from({ length: density }, (_, index) => {
+      const depth = Math.pow(random(), 1.85);
+      const bright = random() > .91;
+      return {
+        x: random() * width,
+        y: random() * height,
+        radius: bright ? .85 + random() * 1.25 : .22 + depth * .78,
+        opacity: bright ? .58 + random() * .36 : .14 + random() * .46,
+        phase: random() * Math.PI * 2,
+        speed: .00018 + random() * .00042,
+        color: palette[Math.floor(random() * palette.length)],
+        glow: bright ? 2.5 + random() * 4 : 0,
+        // The launch sky remains subtle; the star map adds its own closer layers.
+        drift: (index % 3 - 1) * (2.4 + depth * 3.2)
+      };
+    });
+  }
+
+  function resize() {
+    window.cancelAnimationFrame(animationFrame);
+    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = Math.round(width * pixelRatio);
+    canvas.height = Math.round(height * pixelRatio);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    buildStars();
+    if (reducedMotion) {
+      draw(performance.now());
+    } else {
+      animationFrame = window.requestAnimationFrame(draw);
+    }
+  }
+
+  function draw(time) {
+    context.clearRect(0, 0, width, height);
+
+    stars.forEach((star) => {
+      const shimmer = reducedMotion ? 1 : .78 + Math.sin(time * star.speed + star.phase) * .22;
+      const x = star.x + (reducedMotion ? 0 : Math.sin(time * .00012 + star.phase) * star.drift);
+      const [red, green, blue] = star.color;
+
+      if (star.glow) {
+        context.beginPath();
+        context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${star.opacity * .12 * shimmer})`;
+        context.arc(x, star.y, star.radius + star.glow, 0, Math.PI * 2);
+        context.fill();
+      }
+
+      context.beginPath();
+      context.fillStyle = `rgba(${red}, ${green}, ${blue}, ${star.opacity * shimmer})`;
+      context.arc(x, star.y, star.radius, 0, Math.PI * 2);
+      context.fill();
+    });
+
+    if (!reducedMotion) animationFrame = window.requestAnimationFrame(draw);
+  }
+
+  resize();
+  window.addEventListener("resize", resize);
+  window.addEventListener("beforeunload", () => window.cancelAnimationFrame(animationFrame));
+}
+
+createStarfield();
+
+function closePanels() {
+  archiveOverlay.hidden = true;
+  signalOverlay.hidden = true;
+}
+
+const spaceAudio = new Audio("tattooedpreacher-above-earth-8672.mp3");
+spaceAudio.loop = true;
+spaceAudio.preload = "auto";
+spaceAudio.volume = 0;
+
+const soundButton = document.querySelector("#sound-button");
+const targetVolume = 0.35;
+let fadeTimer = null;
+
+function setSoundButton(isEnabled) {
+  soundButton.classList.toggle("active", isEnabled);
+  soundButton.setAttribute("aria-pressed", String(isEnabled));
+  soundButton.textContent = isEnabled ? "声场 开" : "声场 关";
+}
+
+function cancelFade() {
+  if (fadeTimer) {
+    window.clearInterval(fadeTimer);
+    fadeTimer = null;
+  }
 }
 
 function fadeAudioTo(volume, duration) {
@@ -136,39 +259,24 @@ launchButton.addEventListener("click", async () => {
   spaceAudio.currentTime = 0;
   spaceAudio.volume = 0;
   let audioStarted = false;
-  let enteredMap = false;
-  let ambientStarted = false;
 
   try {
-    ambientStarted = await startAmbientSoundscape();
-  } catch (error) {
-    ambientStarted = false;
-  }
-
-  const audioAttempt = spaceAudio.play();
-  audioAttempt.then(() => {
+    await spaceAudio.play();
     audioStarted = true;
-    if (enteredMap) {
-      setSoundButton(true);
-      fadeAudioTo(targetVolume, 7000);
-    }
-  }).catch(() => {
+  } catch (error) {
     setSoundButton(false);
-  });
+  }
 
   window.setTimeout(() => {
     launchScreen.hidden = true;
     launchTransition.hidden = true;
     starMap.hidden = false;
     siteShell.classList.add("is-launched");
-    enteredMap = true;
 
     if (audioStarted) {
       setSoundButton(true);
       // The music becomes audible only after entering the star map, then rises gently.
       fadeAudioTo(targetVolume, 7000);
-    } else if (ambientStarted) {
-      setSoundButton(true);
     }
   }, 1450);
 });
@@ -176,7 +284,6 @@ launchButton.addEventListener("click", async () => {
 document.querySelector("#return-outside").addEventListener("click", () => {
   closeOriginPlanet();
   cancelFade();
-  stopAmbientSoundscape();
   spaceAudio.pause();
   spaceAudio.currentTime = 0;
   spaceAudio.volume = 0;
@@ -199,21 +306,14 @@ soundButton.addEventListener("click", async () => {
       spaceAudio.volume = 0;
       await spaceAudio.play();
       setSoundButton(true);
-      startAmbientSoundscape();
       fadeAudioTo(targetVolume, 1500);
     } catch (error) {
-      try {
-        await startAmbientSoundscape(0.045);
-        setSoundButton(true);
-      } catch (_) {
-        setSoundButton(false);
-        soundButton.textContent = "声场加载失败";
-      }
+      setSoundButton(false);
+      soundButton.textContent = "声场加载失败";
     }
   } else {
     spaceAudio.pause();
     spaceAudio.volume = 0;
-    stopAmbientSoundscape();
     setSoundButton(false);
   }
 });
@@ -245,7 +345,7 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
       document.querySelector("#archive-summary").textContent = item.summary;
       document.querySelector("#archive-detail").textContent = item.detail;
     document.querySelector("#archive-card").style.setProperty("--accent", item.color);
-    openPanel(archiveOverlay, button);
+    archiveOverlay.hidden = false;
       mapViewport.classList.remove("is-approaching");
       button.classList.remove("is-approaching");
       isApproachingDestination = false;
@@ -254,7 +354,7 @@ document.querySelectorAll("[data-destination]").forEach((button) => {
 });
 
 document.querySelector("#earth-signal").addEventListener("click", () => {
-  openPanel(signalOverlay, document.querySelector("#earth-signal"));
+  signalOverlay.hidden = false;
 });
 
 document.querySelectorAll("[data-close]").forEach((button) => {
